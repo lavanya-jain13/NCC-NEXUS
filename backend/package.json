@@ -1,0 +1,22 @@
+{
+  "name": "ncc-nexus-backend",
+  "version": "1.0.0",
+  "description": "NCC Nexus Backend",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^7.0.11",
+    "pg": "^8.16.3",
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "knex": "^3.1.0"
+  }
+}
