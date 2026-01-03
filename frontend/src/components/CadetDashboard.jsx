@@ -13,6 +13,7 @@ import "./dashboard.css";
 import logoImage from "./assets/ncc-logo.png";
 import Feed from "./Feed";
 import ResetPasswordModal from "./ResetPasswordModal";
+import Chatbot from "./Chatbot";
 
 export default function CadetDashboard() {
   const navigate = useNavigate();
@@ -40,9 +41,7 @@ export default function CadetDashboard() {
 
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setProfileImage(URL.createObjectURL(file));
-    }
+    if (file) setProfileImage(URL.createObjectURL(file));
   };
 
   /* ================= BIO EDIT ================= */
@@ -121,11 +120,76 @@ export default function CadetDashboard() {
             </div>
           </div>
 
-          <button className="logout-item" onClick={() => navigate("/")}>
-            <LogOut size={18} />
-            <span>Logout</span>
-          </button>
-        </aside>
+          <div className="nav-list">
+            <button
+              className={`nav-item ${activeTab === "profile" ? "active" : ""}`}
+              onClick={() => setActiveTab("profile")}
+            >
+              <User size={18} />
+              <span>Profile</span>
+            </button>
+
+            <button
+              className={`nav-item ${activeTab === "feed" ? "active" : ""}`}
+              onClick={() => setActiveTab("feed")}
+            >
+              <MapPin size={18} />
+              <span>Feed</span>
+            </button>
+
+            <button
+              className={`nav-item ${activeTab === "chatbot" ? "active" : ""}`}
+              onClick={() => setActiveTab("chatbot")}
+            >
+              🤖 <span>Chatbot</span>
+            </button>
+
+            <button className="nav-item">
+              <ImageIcon size={18} />
+              <span>Certificates</span>
+            </button>
+          </div>
+        </div>
+
+        <button className="logout-item" onClick={() => navigate("/")}>
+          <LogOut size={18} />
+          <span>Logout</span>
+        </button>
+      </aside>
+
+      {/* ================= MAIN ================= */}
+      <main className="main">
+
+        {activeTab === "chatbot" && <Chatbot />}
+
+        {activeTab === "feed" && (
+          <Feed
+            profileImage={profileImage}
+            profileName={profileData.name}
+            mode="feed"
+          />
+        )}
+
+        {activeTab === "profile" && (
+          <>
+            {/* ================= PROFILE UI ================= */}
+            <div className="banner">
+              <div className="profile-photo-wrapper">
+                <img src={profileImage} className="profile-photo" />
+                <button
+                  className="camera-icon"
+                  onClick={() => fileInputRef.current.click()}
+                >
+                  <Camera size={16} />
+                </button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  hidden
+                  onChange={handleProfileImageChange}
+                />
+              </div>
+            </div>
 
         {/* ================= MAIN ================= */}
         <main className="main">
@@ -153,29 +217,24 @@ export default function CadetDashboard() {
                     hidden
                     onChange={handleProfileImageChange}
                   />
+            <div className="profile-details">
+              <div className="profile-top-row">
+                <div className="name-area">
+                  <h1 className="profile-name">{profileData.name}</h1>
+                  <span className="role-badge">CADET</span>
                 </div>
               </div>
 
-              <div className="profile-details">
-                <div className="profile-top-row">
-                  <div className="name-area">
-                    <h1 className="profile-name">
-                      {profileData.name}
-                    </h1>
-                    <span className="role-badge">CADET</span>
-                  </div>
+              <div className="profile-info">
+                <div className="info-pill">
+                  <User size={16} />
+                  {profileData.rank}
                 </div>
-
-                <div className="profile-info">
-                  <div className="info-pill">
-                    <User size={16} />
-                    {profileData.rank}
-                  </div>
-                  <div className="info-pill">
-                    <MapPin size={16} />
-                    {profileData.location}
-                  </div>
+                <div className="info-pill">
+                  <MapPin size={16} />
+                  {profileData.location}
                 </div>
+              </div>
 
                 <div className="bio-container">
                   {isEditingBio ? (
@@ -210,9 +269,27 @@ export default function CadetDashboard() {
                         <Edit2 size={16} />
                       </button>
                     </div>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <div className="bio-display">
+                    <p className="bio">"{profileData.bio}"</p>
+                    <button className="bio-edit-icon" onClick={startEditBio}>
+                      <Edit2 size={16} />
+                    </button>
+                  </div>
+                )}
               </div>
+            </div>
+
+            <h2 className="section-title">Recent Activity</h2>
+
+            <Feed
+              profileImage={profileImage}
+              profileName={profileData.name}
+              mode="profile"
+            />
+          </>
+        )}
 
               <h2 className="section-title">Recent Activity</h2>
 
