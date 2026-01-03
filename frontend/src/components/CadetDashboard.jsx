@@ -6,11 +6,13 @@ import {
   LogOut,
   Camera,
   Edit2,
+  KeyRound,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./dashboard.css";
 import logoImage from "./assets/ncc-logo.png";
 import Feed from "./Feed";
+import ResetPasswordModal from "./ResetPasswordModal";
 import Chatbot from "./Chatbot";
 
 export default function CadetDashboard() {
@@ -18,6 +20,9 @@ export default function CadetDashboard() {
 
   /* ================= TAB STATE ================= */
   const [activeTab, setActiveTab] = useState("profile");
+
+  /* ================= RESET PASSWORD ================= */
+  const [showReset, setShowReset] = useState(false);
 
   /* ================= PROFILE STATE ================= */
   const [profileImage, setProfileImage] = useState(
@@ -39,7 +44,7 @@ export default function CadetDashboard() {
     if (file) setProfileImage(URL.createObjectURL(file));
   };
 
-  /* ================= BIO EDIT STATE ================= */
+  /* ================= BIO EDIT ================= */
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [tempBio, setTempBio] = useState("");
 
@@ -61,15 +66,57 @@ export default function CadetDashboard() {
   };
 
   return (
-    <div className="layout">
-      {/* ================= SIDEBAR ================= */}
-      <aside className="sidebar">
-        <div>
-          <div className="sidebar-header">
-            <img src={logoImage} className="sidebar-logo" />
-            <div className="logo-text">
-              <h1>NCC NEXUS</h1>
-              <p>CADET DASHBOARD</p>
+    <>
+      {/* ================= RESET PASSWORD MODAL ================= */}
+      {showReset && (
+        <ResetPasswordModal onClose={() => setShowReset(false)} />
+      )}
+
+      <div className="layout">
+        {/* ================= SIDEBAR ================= */}
+        <aside className="sidebar">
+          <div>
+            <div className="sidebar-header">
+              <img src={logoImage} className="sidebar-logo" />
+              <div className="logo-text">
+                <h1>NCC NEXUS</h1>
+                <p>CADET DASHBOARD</p>
+              </div>
+            </div>
+
+            <div className="nav-list">
+              <button
+                className={`nav-item ${
+                  activeTab === "profile" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("profile")}
+              >
+                <User size={18} />
+                <span>Profile</span>
+              </button>
+
+              <button
+                className={`nav-item ${
+                  activeTab === "feed" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("feed")}
+              >
+                <MapPin size={18} />
+                <span>Feed</span>
+              </button>
+
+              <button className="nav-item">
+                <ImageIcon size={18} />
+                <span>Certificates</span>
+              </button>
+
+              <button
+                className="nav-item"
+                onClick={() => setShowReset(true)}
+              >
+                <KeyRound size={18} />
+                <span>Reset Password</span>
+              </button>
             </div>
           </div>
 
@@ -144,6 +191,32 @@ export default function CadetDashboard() {
               </div>
             </div>
 
+        {/* ================= MAIN ================= */}
+        <main className="main">
+          {activeTab === "feed" ? (
+            <Feed
+              profileImage={profileImage}
+              profileName={profileData.name}
+              mode="feed"
+            />
+          ) : (
+            <>
+              {/* ================= PROFILE HEADER ================= */}
+              <div className="banner">
+                <div className="profile-photo-wrapper">
+                  <img src={profileImage} className="profile-photo" />
+                  <button
+                    className="camera-icon"
+                    onClick={() => fileInputRef.current.click()}
+                  >
+                    <Camera size={16} />
+                  </button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    hidden
+                    onChange={handleProfileImageChange}
+                  />
             <div className="profile-details">
               <div className="profile-top-row">
                 <div className="name-area">
@@ -163,20 +236,37 @@ export default function CadetDashboard() {
                 </div>
               </div>
 
-              <div className="bio-container">
-                {isEditingBio ? (
-                  <div className="bio-edit-mode">
-                    <textarea
-                      className="bio-edit-textarea"
-                      value={tempBio}
-                      onChange={(e) => setTempBio(e.target.value)}
-                    />
-                    <div className="bio-edit-actions">
-                      <button className="bio-save-btn" onClick={saveBio}>
-                        Save
-                      </button>
-                      <button className="bio-cancel-btn" onClick={cancelEditBio}>
-                        Cancel
+                <div className="bio-container">
+                  {isEditingBio ? (
+                    <div className="bio-edit-mode">
+                      <textarea
+                        className="bio-edit-textarea"
+                        value={tempBio}
+                        onChange={(e) => setTempBio(e.target.value)}
+                      />
+                      <div className="bio-edit-actions">
+                        <button
+                          className="bio-save-btn"
+                          onClick={saveBio}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="bio-cancel-btn"
+                          onClick={cancelEditBio}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bio-display">
+                      <p className="bio">"{profileData.bio}"</p>
+                      <button
+                        className="bio-edit-icon"
+                        onClick={startEditBio}
+                      >
+                        <Edit2 size={16} />
                       </button>
                     </div>
                   </div>
@@ -201,7 +291,17 @@ export default function CadetDashboard() {
           </>
         )}
 
-      </main>
-    </div>
+              <h2 className="section-title">Recent Activity</h2>
+
+              <Feed
+                profileImage={profileImage}
+                profileName={profileData.name}
+                mode="profile"
+              />
+            </>
+          )}
+        </main>
+      </div>
+    </>
   );
 }
