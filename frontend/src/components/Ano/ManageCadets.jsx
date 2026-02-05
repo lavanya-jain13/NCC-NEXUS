@@ -45,8 +45,12 @@ const ManageCadets = () => {
 
   // 🔥 LOGIC: Auto-select "None" in Edit Modal if Alumni is chosen
   useEffect(() => {
-    if (selectedCadet && selectedCadet.role === "Alumni") {
-      setSelectedCadet(prev => ({ ...prev, rank: "None" }));
+    if (selectedCadet) {
+      if (selectedCadet.role === "Alumni") {
+        setSelectedCadet(prev => ({ ...prev, rank: "None" }));
+      } else if (selectedCadet.role === "SUO") {
+        setSelectedCadet(prev => ({ ...prev, rank: "Senior Under Officer" }));
+      }
     }
   }, [selectedCadet?.role]);
 
@@ -205,8 +209,8 @@ const ManageCadets = () => {
             <select
               value={selectedCadet.rank}
               onChange={(e) => setSelectedCadet({ ...selectedCadet, rank: e.target.value })}
-              // Disable rank input if Alumni (it forces to None)
-              disabled={selectedCadet.role === "Alumni"}
+              // Disable rank input if Alumni or SUO (forced values)
+              disabled={selectedCadet.role === "Alumni" || selectedCadet.role === "SUO"}
             >
               {RANKS.map(rank => <option key={rank} value={rank}>{rank}</option>)}
             </select>

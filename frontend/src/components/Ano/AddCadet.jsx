@@ -27,10 +27,22 @@ const AddCadet = () => {
     joining_year: new Date().getFullYear().toString()
   });
 
+  // month picker value (stores YYYY-MM) so user gets a calendar UX while we
+  // keep `joining_year` as a year string for API/backend compatibility.
+  const [joiningMonth, setJoiningMonth] = useState(`${new Date().getFullYear()}-01`);
+
+  useEffect(() => {
+    if (formData.joining_year) {
+      setJoiningMonth(`${formData.joining_year}-01`);
+    }
+  }, [formData.joining_year]);
+
   // 🔥 LOGIC: Auto-select "None" if Alumni is chosen
   useEffect(() => {
     if (formData.role === "Alumni") {
       setFormData(prev => ({ ...prev, rank: "None" }));
+    } else if (formData.role === "SUO") {
+      setFormData(prev => ({ ...prev, rank: "Senior Under Officer" }));
     }
   }, [formData.role]);
 
@@ -117,9 +129,9 @@ const AddCadet = () => {
             name="rank" 
             value={formData.rank} 
             onChange={handleChange}
-            // Optional: Disable rank if Alumni is selected to prevent mistakes
-            disabled={formData.role === "Alumni"}
-            style={{ backgroundColor: formData.role === "Alumni" ? "#e9ecef" : "white" }}
+            // Disable rank if Alumni or SUO is selected to prevent mistakes
+            disabled={formData.role === "Alumni" || formData.role === "SUO"}
+            style={{ backgroundColor: (formData.role === "Alumni" || formData.role === "SUO") ? "#e9ecef" : "white" }}
           >
             <option value="">Select Rank</option>
             {RANKS.map(rank => <option key={rank} value={rank}>{rank}</option>)}
@@ -128,7 +140,18 @@ const AddCadet = () => {
 
         <div className="form-group">
           <label>Year</label>
-          <input name="joining_year" value={formData.joining_year} onChange={handleChange} placeholder="2024" />
+          <input
+            type="month"
+            name="joining_month"
+            value={joiningMonth}
+            onChange={(e) => {
+              const monthVal = e.target.value; // YYYY-MM
+              setJoiningMonth(monthVal);
+              const yearOnly = monthVal ? monthVal.split('-')[0] : '';
+              setFormData(prev => ({ ...prev, joining_year: yearOnly }));
+            }}
+          />
+          
         </div>
         
         <button className="primary-btn" onClick={handleSubmit} disabled={loading}>
