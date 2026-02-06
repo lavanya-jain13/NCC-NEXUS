@@ -8,20 +8,22 @@
 .feed-title {
   font-size: 32px;
   font-weight: 700;
+  color: var(--ncc-text-dark, hsl(225, 25%, 12%));
 }
 
 .feed-subtitle {
-  color: #94a3b8;
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
   margin-bottom: 25px;
 }
 
 /* ================= CREATE POST ================= */
 .feed-create-card {
-  background: rgba(17, 22, 37, 0.95);
+  background: var(--ncc-card-bg, hsl(0, 0%, 98%));
   border-radius: 22px;
   padding: 22px;
   margin-bottom: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--ncc-shadow-card, 0 2px 12px hsla(262, 40%, 40%, 0.12));
 }
 
 .feed-input-row {
@@ -38,23 +40,23 @@
 
 .feed-input {
   flex: 1;
-  background: #1f2937;
-  border: none;
+  background: hsl(0, 0%, 97%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 14px;
   padding: 14px 16px;
-  color: white;
+  color: var(--ncc-text-dark, hsl(225, 25%, 12%));
   font-size: 15px;
 }
 
 .feed-input::placeholder {
-  color: #9aa4b2;
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
 }
 
 /* ================= DIVIDER ================= */
 .divider {
   width: 100%;
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.08);
   margin: 18px 0;
 }
 
@@ -73,14 +75,15 @@
 .feed-media-actions button {
   background: none;
   border: none;
-  color: #9aa4b2;
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
   display: flex;
   gap: 8px;
   cursor: pointer;
 }
 
 .feed-post-btn {
-  background: #8fb03d;
+  background: var(--ncc-gradient, linear-gradient(135deg, hsl(262, 83%, 58%), hsl(280, 100%, 70%)));
+  color: white;
   border: none;
   padding: 10px 18px;
   border-radius: 14px;
@@ -89,15 +92,17 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  box-shadow: var(--ncc-shadow, 0 4px 20px hsla(262, 83%, 58%, 0.15));
 }
 
 /* ================= FEED CARD ================= */
 .feed-card {
-  background: rgba(17, 22, 37, 0.95);
+  background: var(--ncc-card-bg, hsl(0, 0%, 98%));
   border-radius: 22px;
   padding: 22px;
   margin-bottom: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--ncc-shadow-card, 0 2px 12px hsla(262, 40%, 40%, 0.12));
 }
 
 .feed-card-header {
@@ -112,8 +117,8 @@
 }
 
 .feed-role {
-  background: #8fb03d;
-  color: black;
+  background: var(--ncc-gradient, linear-gradient(135deg, hsl(262, 83%, 58%), hsl(280, 100%, 70%)));
+  color: white;
   font-size: 11px;
   padding: 4px 8px;
   border-radius: 12px;
@@ -122,12 +127,13 @@
 
 .feed-meta {
   font-size: 12px;
-  color: #9aa4b2;
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
 }
 
 .feed-text {
   margin-top: 12px;
   font-size: 15px;
+  color: var(--ncc-text-dark, hsl(225, 25%, 12%));
 }
 
 .feed-post-image,
@@ -143,9 +149,9 @@
   gap: 16px;
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
   font-size: 13px;
-  color: #9aa4b2;
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
 }
 
 .stat-item {
@@ -159,7 +165,7 @@
   display: flex;
   gap: 22px;
   margin-top: 16px;
-  color: #9aa4b2;
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
   cursor: pointer;
 }
 
@@ -169,7 +175,7 @@
   gap: 8px;
   background: none;
   border: none;
-  color: #9aa4b2;
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
   cursor: pointer;
   padding: 6px 10px;
   border-radius: 10px;
@@ -177,14 +183,14 @@
 }
 
 .feed-action-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #e5e7eb;
+  background: hsla(262, 83%, 58%, 0.08);
+  color: var(--ncc-primary, hsl(262, 83%, 58%));
 }
 
 .feed-action-count {
-  background: rgba(143, 176, 61, 0.18);
-  border: 1px solid rgba(143, 176, 61, 0.35);
-  color: #d7f0a6;
+  background: hsla(262, 83%, 58%, 0.15);
+  border: 1px solid hsla(262, 83%, 58%, 0.3);
+  color: var(--ncc-primary, hsl(262, 83%, 58%));
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 12px;
@@ -198,11 +204,11 @@
 
 .menu-wrapper svg {
   cursor: pointer;
-  color: #9aa4b2;
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
 }
 
 .menu-wrapper svg:hover {
-  color: white;
+  color: var(--ncc-text-dark, hsl(225, 25%, 12%));
 }
 
 /* ================= DROPDOWN ================= */
@@ -211,12 +217,12 @@
   top: 30px;
   right: 0;
   width: 150px;
-  background: #0f172a;
-  border: 1px solid #1e293b;
+  background: var(--ncc-card-bg, hsl(0, 0%, 98%));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   overflow: hidden;
   z-index: 999;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+  box-shadow: var(--ncc-shadow, 0 4px 20px hsla(262, 83%, 58%, 0.15));
   animation: dropdownFade 0.15s ease;
 }
 
@@ -225,7 +231,7 @@
   padding: 12px 16px;
   background: none;
   border: none;
-  color: #e5e7eb;
+  color: var(--ncc-text-dark, hsl(225, 25%, 12%));
   font-size: 14px;
   text-align: left;
   cursor: pointer;
@@ -233,7 +239,7 @@
 }
 
 .menu-dropdown button:hover {
-  background: #1e293b;
+  background: hsl(0, 0%, 95%);
 }
 
 /* DELETE */
@@ -272,11 +278,12 @@
 .edit-modal {
   width: 520px;
   max-width: 92vw;
-  background: #0d1117;
+  background: var(--ncc-card-bg, hsl(0, 0%, 98%));
   border-radius: 22px;
   padding: 32px 28px;
-  border: 1px solid #1f2937;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   animation: modalPop 0.25s ease;
+  box-shadow: var(--ncc-shadow, 0 4px 20px hsla(262, 83%, 58%, 0.15));
 }
 
 @media (max-width: 768px) {
@@ -314,9 +321,9 @@
 }
 
 .comment-sort-select {
-  background: #1f2937;
-  color: white;
-  border: 1px solid #374151;
+  background: hsl(0, 0%, 97%);
+  color: var(--ncc-text-dark, hsl(225, 25%, 12%));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 6px 12px;
   font-size: 13px;
@@ -330,12 +337,12 @@
 }
 
 .pinned-icon {
-  color: #a6c34e;
+  color: var(--ncc-primary, hsl(262, 83%, 58%));
 }
 
 .pinned-comment {
-  background: rgba(166, 195, 78, 0.1);
-  border-left: 3px solid #a6c34e;
+  background: hsla(262, 83%, 58%, 0.08);
+  border-left: 3px solid var(--ncc-primary, hsl(262, 83%, 58%));
 }
 
 .view-replies-section {
@@ -346,7 +353,7 @@
 .view-replies-btn {
   background: none;
   border: none;
-  color: #9aa4b2;
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
   font-size: 13px;
   cursor: pointer;
   display: flex;
@@ -357,12 +364,12 @@
 }
 
 .view-replies-btn:hover {
-  color: white;
+  color: var(--ncc-primary, hsl(262, 83%, 58%));
 }
 
 /* ================= MENTIONS ================= */
 .mention {
-  color: #8cc04b;
+  color: var(--ncc-primary, hsl(262, 83%, 58%));
   font-weight: 600;
   cursor: pointer;
 }
@@ -374,9 +381,9 @@
 .edit-textarea {
   width: 100%;
   min-height: 140px;
-  background: #1f2937;
-  color: white;
-  border: 1px solid #374151;
+  background: hsl(0, 0%, 97%);
+  color: var(--ncc-text-dark, hsl(225, 25%, 12%));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 14px;
   padding: 14px 16px;
   resize: none;
@@ -385,14 +392,15 @@
 .edit-save-btn {
   margin-top: 22px;
   width: 100%;
-  background: #8cc04b;
-  color: black;
+  background: var(--ncc-gradient, linear-gradient(135deg, hsl(262, 83%, 58%), hsl(280, 100%, 70%)));
+  color: white;
   border: none;
   padding: 14px;
   border-radius: 14px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+  box-shadow: var(--ncc-shadow, 0 4px 20px hsla(262, 83%, 58%, 0.15));
 }
 
 /* ================= COMMENTS ================= */
@@ -403,10 +411,11 @@
 }
 
 .comment-item-popup {
-  background: rgba(255, 255, 255, 0.04);
+  background: hsl(0, 0%, 97%);
   border-radius: 14px;
   padding: 14px 16px;
   margin-bottom: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .comment-header-row {
@@ -418,7 +427,7 @@
 
 .comment-time {
   font-size: 12px;
-  color: #9aa4b2;
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
 }
 
 .comment-actions {
@@ -433,13 +442,13 @@
   align-items: center;
   gap: 4px;
   font-size: 13px;
-  color: #9aa4b2;
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
   cursor: pointer;
   transition: color 0.2s;
 }
 
 .comment-action-btn:hover {
-  color: white;
+  color: var(--ncc-primary, hsl(262, 83%, 58%));
 }
 
 .comment-delete {
@@ -461,9 +470,9 @@
 .comment-edit-textarea {
   width: 100%;
   min-height: 60px;
-  background: #1f2937;
-  color: white;
-  border: 1px solid #374151;
+  background: hsl(0, 0%, 97%);
+  color: var(--ncc-text-dark, hsl(225, 25%, 12%));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 10px 12px;
   resize: none;
@@ -477,8 +486,8 @@
 }
 
 .comment-save-btn {
-  background: #8cc04b;
-  color: black;
+  background: var(--ncc-gradient, linear-gradient(135deg, hsl(262, 83%, 58%), hsl(280, 100%, 70%)));
+  color: white;
   border: none;
   padding: 6px 14px;
   border-radius: 8px;
@@ -488,9 +497,9 @@
 }
 
 .comment-cancel-btn {
-  background: #374151;
-  color: white;
-  border: none;
+  background: hsl(0, 0%, 90%);
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 6px 14px;
   border-radius: 8px;
   font-size: 13px;
@@ -502,21 +511,22 @@
   margin-top: 12px;
   margin-left: 20px;
   padding-left: 16px;
-  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  border-left: 2px solid hsla(262, 83%, 58%, 0.3);
 }
 
 .replies-container.nested-reply {
   margin-left: 30px;
   margin-top: 8px;
   padding-left: 12px;
-  border-left: 2px solid rgba(255, 255, 255, 0.08);
+  border-left: 2px solid hsla(262, 83%, 58%, 0.2);
 }
 
 .reply-item {
-  background: rgba(255, 255, 255, 0.03);
+  background: hsl(0, 0%, 98%);
   border-radius: 10px;
   padding: 10px 12px;
   margin-bottom: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .reply-item .comment-header-row {
@@ -542,9 +552,9 @@
 .reply-textarea {
   width: 100%;
   min-height: 50px;
-  background: #1f2937;
-  color: white;
-  border: 1px solid #374151;
+  background: hsl(0, 0%, 97%);
+  color: var(--ncc-text-dark, hsl(225, 25%, 12%));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 10px 12px;
   resize: none;
@@ -558,8 +568,8 @@
 }
 
 .reply-send-btn {
-  background: #8cc04b;
-  color: black;
+  background: var(--ncc-gradient, linear-gradient(135deg, hsl(262, 83%, 58%), hsl(280, 100%, 70%)));
+  color: white;
   border: none;
   padding: 6px 14px;
   border-radius: 8px;
@@ -569,9 +579,9 @@
 }
 
 .reply-cancel-btn {
-  background: #374151;
-  color: white;
-  border: none;
+  background: hsl(0, 0%, 90%);
+  color: var(--ncc-text-muted, hsl(225, 15%, 40%));
+  border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 6px 14px;
   border-radius: 8px;
   font-size: 13px;
