@@ -8,6 +8,7 @@ import {
   Edit2,
   KeyRound,
   MessageSquare,
+  Calendar,
 } from "lucide-react";
 import ChatLayout from "../ChatCommon/ChatLayout";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,7 @@ import logoImage from "../assets/ncc-logo.png"; // Adjusted path to assets
 import Feed from "./feed";
 import ResetPasswordModal from "./resetPassword";
 import Chatbot from "./chatbot";
+import SuoAttendance from "./SuoAttendance";
 // Assuming these actions exist in your uiSlice for the SUO role
 import { closeSUOSidebar, toggleSUOSidebar } from "../../features/ui/uiSlice";
 
@@ -130,6 +132,17 @@ export default function SUODashboard() {
               </button>
 
               <button
+                className={`nav-item ${activeTab === "attendance" ? "active" : ""}`}
+                onClick={() => {
+                  setActiveTab("attendance");
+                  dispatch(closeSUOSidebar());
+                }}
+              >
+                <Calendar size={18} />
+                <span>Attendance</span>
+              </button>
+
+              <button
                 className={`nav-item ${activeTab === "chat" ? "active" : ""}`}
                 onClick={() => {
                   setActiveTab("chat");
@@ -189,6 +202,8 @@ export default function SUODashboard() {
           )}
 
           {activeTab === "chatbot" && <Chatbot />}
+
+          {activeTab === "attendance" && <SuoAttendance />}
 
           {activeTab === "feed" && (
             <Feed

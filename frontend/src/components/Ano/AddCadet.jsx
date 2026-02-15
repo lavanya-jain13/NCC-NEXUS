@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
+import { addCadetToAttendance } from "../attendanceStore";
 
-// ✅ ADDED "Alumni"
-const ROLES = ["Cadet", "SUO", "Alumni"]; 
+const ROLES = ["Cadet", "SUO", "Alumni"];
 
-// ✅ ADDED "None"
 const RANKS = [
   "Senior Under Officer",
   "Under Officer",
@@ -13,7 +12,7 @@ const RANKS = [
   "Corporal",
   "Lance Corporal",
   "Cadet",
-  "None" 
+  "None",
 ];
 
 const AddCadet = () => {
@@ -24,11 +23,9 @@ const AddCadet = () => {
     regimental_no: "",
     role: "",
     rank: "",
-    joining_year: new Date().getFullYear().toString()
+    joining_year: new Date().getFullYear().toString(),
   });
 
-  // month picker value (stores YYYY-MM) so user gets a calendar UX while we
-  // keep `joining_year` as a year string for API/backend compatibility.
   const [joiningMonth, setJoiningMonth] = useState(`${new Date().getFullYear()}-01`);
 
   useEffect(() => {
@@ -37,12 +34,11 @@ const AddCadet = () => {
     }
   }, [formData.joining_year]);
 
-  // 🔥 LOGIC: Auto-select "None" if Alumni is chosen
   useEffect(() => {
     if (formData.role === "Alumni") {
-      setFormData(prev => ({ ...prev, rank: "None" }));
+      setFormData((prev) => ({ ...prev, rank: "None" }));
     } else if (formData.role === "SUO") {
-      setFormData(prev => ({ ...prev, rank: "Senior Under Officer" }));
+      setFormData((prev) => ({ ...prev, rank: "Senior Under Officer" }));
     }
   }, [formData.role]);
 
@@ -64,25 +60,29 @@ const AddCadet = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        alert("✅ Cadet added successfully!");
+        if (formData.role === "Cadet") {
+          addCadetToAttendance(formData.full_name);
+        }
+
+        alert("Cadet added successfully!");
         setFormData({
           full_name: "",
           email: "",
           regimental_no: "",
           role: "",
           rank: "",
-          joining_year: new Date().getFullYear().toString()
+          joining_year: new Date().getFullYear().toString(),
         });
       } else {
-        alert(`❌ Error: ${data.message}`);
+        alert(`Error: ${data.message}`);
       }
     } catch (error) {
       console.error("API Error:", error);
@@ -119,22 +119,29 @@ const AddCadet = () => {
           <label>Role</label>
           <select name="role" value={formData.role} onChange={handleChange}>
             <option value="">Select Role</option>
-            {ROLES.map(role => <option key={role} value={role}>{role}</option>)}
+            {ROLES.map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            ))}
           </select>
         </div>
 
         <div className="form-group">
           <label>Rank</label>
-          <select 
-            name="rank" 
-            value={formData.rank} 
+          <select
+            name="rank"
+            value={formData.rank}
             onChange={handleChange}
-            // Disable rank if Alumni or SUO is selected to prevent mistakes
             disabled={formData.role === "Alumni" || formData.role === "SUO"}
-            style={{ backgroundColor: (formData.role === "Alumni" || formData.role === "SUO") ? "#e9ecef" : "white" }}
+            style={{ backgroundColor: formData.role === "Alumni" || formData.role === "SUO" ? "#e9ecef" : "white" }}
           >
             <option value="">Select Rank</option>
-            {RANKS.map(rank => <option key={rank} value={rank}>{rank}</option>)}
+            {RANKS.map((rank) => (
+              <option key={rank} value={rank}>
+                {rank}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -145,15 +152,14 @@ const AddCadet = () => {
             name="joining_month"
             value={joiningMonth}
             onChange={(e) => {
-              const monthVal = e.target.value; // YYYY-MM
+              const monthVal = e.target.value;
               setJoiningMonth(monthVal);
-              const yearOnly = monthVal ? monthVal.split('-')[0] : '';
-              setFormData(prev => ({ ...prev, joining_year: yearOnly }));
+              const yearOnly = monthVal ? monthVal.split("-")[0] : "";
+              setFormData((prev) => ({ ...prev, joining_year: yearOnly }));
             }}
           />
-          
         </div>
-        
+
         <button className="primary-btn" onClick={handleSubmit} disabled={loading}>
           {loading ? "Generating..." : "Generate Credentials"}
         </button>
