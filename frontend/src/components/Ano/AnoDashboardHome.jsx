@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaUsers, FaUserCheck, FaUserShield, FaGraduationCap } from "react-icons/fa";
+import MeetingDashboardSection from "../Meetings/MeetingDashboardSection";
 import "./anoDashboardHome.css";
 
 const AnoDashboardHome = () => {
@@ -90,6 +91,12 @@ const AnoDashboardHome = () => {
           </div>
         </div>
       </div>
+
+      <MeetingDashboardSection
+        sectionTitle="Upcoming Meetings"
+        mode="UPCOMING"
+        basePath="/ano/meetings"
+      />
     </div>
   );
 };

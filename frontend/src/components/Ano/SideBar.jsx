@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FaUserPlus, FaUsers, FaComments, FaClipboardList, FaTachometerAlt } from "react-icons/fa";
+import { FaUserPlus, FaUsers, FaComments, FaClipboardList, FaTachometerAlt, FaVideo } from "react-icons/fa";
 import nccLogo from "../assets/ncc-logo.png";
 
 const Sidebar = ({ isOpen = true, onClose }) => {
@@ -50,6 +50,14 @@ const Sidebar = ({ isOpen = true, onClose }) => {
             onClick={() => (typeof onClose === "function" ? onClose() : undefined)}
           >
             <FaClipboardList /> <span>Attendance</span>
+          </NavLink>
+
+          <NavLink
+            to="meetings"
+            className="menu-item"
+            onClick={() => (typeof onClose === "function" ? onClose() : undefined)}
+          >
+            <FaVideo /> <span>Meetings</span>
           </NavLink>
 
           <NavLink

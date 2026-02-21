@@ -88,7 +88,7 @@ app.use("/api/chat", chatRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/attendance", attendanceRoutes);
-// ------------------------------------------
+-
 // 9. Global Error Handler
 // ------------------------------------------
 app.use((err, req, res, next) => {

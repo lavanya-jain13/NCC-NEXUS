@@ -14,6 +14,7 @@ import {
   BarChart3,
   Award,
   Users,
+  Video,
 } from "lucide-react";
 import ChatLayout from "../ChatCommon/ChatLayout";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +25,10 @@ import Feed from "./feed";
 import ResetPasswordModal from "./resetPassword";
 import Chatbot from "./chatbot";
 import SuoAttendance from "./SuoAttendance";
+import MeetingListPage from "../Meetings/MeetingListPage";
+import MeetingCreatePage from "../Meetings/MeetingCreatePage";
+import MeetingDashboardSection from "../Meetings/MeetingDashboardSection";
+import { canCreateMeeting, getCurrentRole } from "../Meetings/meetingUtils";
 import { closeSUOSidebar, toggleSUOSidebar } from "../../features/ui/uiSlice";
 
 export default function SUODashboard() {
@@ -194,6 +199,9 @@ export default function SUODashboard() {
     fetchProfile(token);
   }, [navigate]);
 
+  const role = getCurrentRole();
+  const canCreate = canCreateMeeting(role);
+
   return (
     <>
       <div className="suo-dashboard">
@@ -269,6 +277,17 @@ export default function SUODashboard() {
                 </button>
 
                 <button
+                  className={`nav-item ${activeTab === "meetings" ? "active" : ""}`}
+                  onClick={() => {
+                    setActiveTab("meetings");
+                    dispatch(closeSUOSidebar());
+                  }}
+                >
+                  <Video size={18} />
+                  <span>Meetings</span>
+                </button>
+
+                <button
                   className={`nav-item ${activeTab === "chat" ? "active" : ""}`}
                   onClick={() => {
                     setActiveTab("chat");
@@ -332,6 +351,13 @@ export default function SUODashboard() {
 
             {activeTab === "chatbot" && <Chatbot />}
 
+            {activeTab === "meetings" && (
+              <div className="meeting-tab-shell">
+                <MeetingListPage embedded basePath="/meetings" />
+                {canCreate ? <MeetingCreatePage embedded basePath="/meetings" /> : null}
+              </div>
+            )}
+
             {activeTab === "feed" && (
               <Feed profileImage={profileImage} profileName={profileData.name} mode="feed" />
             )}
@@ -340,7 +366,6 @@ export default function SUODashboard() {
               <div className="profile-page">
                 {loadingProfile ? <p className="loading-text">Loading profile...</p> : null}
 
-                {/* Welcome Section */}
                 <div className="welcome-card">
                   <div className="welcome-text">
                     <h1>Welcome back, {profileData.name ? profileData.name.split(" ")[0] : "SUO"}!</h1>
@@ -349,7 +374,6 @@ export default function SUODashboard() {
                   <span className="welcome-motto">UNITY &amp; DISCIPLINE</span>
                 </div>
 
-                {/* Stat Cards */}
                 <div className="stat-cards">
                   <div className="stat-card">
                     <div className="stat-icon stat-icon-red">
@@ -389,12 +413,12 @@ export default function SUODashboard() {
                   </div>
                 </div>
 
-                {/* Profile Banner */}
+                <MeetingDashboardSection sectionTitle="My Meetings" mode="MY" basePath="/meetings" />
+
                 <div className="banner">
                   <span className="banner-watermark">UNITY AND DISCIPLINE</span>
                 </div>
 
-                {/* Profile Card */}
                 <div className="profile-card">
                   <div className="profile-card-header">
                     <div className="profile-photo-wrapper">

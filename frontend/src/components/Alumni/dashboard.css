@@ -1125,3 +1125,13 @@
     height: 130px;
   }
 }
+
+.alumni-dashboard .meeting-tab-shell {
+  padding: 0 32px 32px;
+}
+
+@media (max-width: 768px) {
+  .alumni-dashboard .meeting-tab-shell {
+    padding: 0 18px 20px;
+  }
+}

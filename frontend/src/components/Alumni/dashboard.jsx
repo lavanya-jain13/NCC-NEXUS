@@ -10,6 +10,7 @@ import {
   BarChart3,
   Award,
   GraduationCap,
+  Video,
 } from "lucide-react";
 import ChatLayout from "../ChatCommon/ChatLayout";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +19,8 @@ import "./dashboard.css";
 import logoImage from "../assets/ncc-logo.png";
 import Feed from "./feed";
 import ResetPasswordModal from "./resetPassword";
+import MeetingListPage from "../Meetings/MeetingListPage";
+import MeetingDashboardSection from "../Meetings/MeetingDashboardSection";
 import { closeAlumniSidebar, toggleAlumniSidebar } from "../../features/ui/uiSlice";
 
 export default function AlumniDashboard() {
@@ -154,6 +157,17 @@ export default function AlumniDashboard() {
                 </button>
 
                 <button
+                  className={`nav-item ${activeTab === "meetings" ? "active" : ""}`}
+                  onClick={() => {
+                    setActiveTab("meetings");
+                    dispatch(closeAlumniSidebar());
+                  }}
+                >
+                  <Video size={18} />
+                  <span>Meetings</span>
+                </button>
+
+                <button
                   className={`nav-item ${activeTab === "chat" ? "active" : ""}`}
                   onClick={() => {
                     setActiveTab("chat");
@@ -213,6 +227,12 @@ export default function AlumniDashboard() {
               </div>
             )}
 
+            {activeTab === "meetings" && (
+              <div className="meeting-tab-shell">
+                <MeetingListPage embedded basePath="/meetings" />
+              </div>
+            )}
+
             {activeTab === "feed" && (
               <Feed profileImage={profileImage || logoImage} profileName={profileData.name} mode="feed" />
             )}
@@ -221,7 +241,6 @@ export default function AlumniDashboard() {
               <div className="profile-page">
                 {loadingProfile ? <p className="loading-text">Loading profile...</p> : null}
 
-                {/* Welcome Section */}
                 <div className="welcome-card">
                   <div className="welcome-text">
                     <h1>Welcome back, {profileData.name ? profileData.name.split(" ")[0] : "Alumni"}!</h1>
@@ -230,7 +249,6 @@ export default function AlumniDashboard() {
                   <span className="welcome-motto">UNITY &amp; DISCIPLINE</span>
                 </div>
 
-                {/* Stat Cards */}
                 <div className="stat-cards">
                   <div className="stat-card">
                     <div className="stat-icon stat-icon-red">
@@ -270,12 +288,12 @@ export default function AlumniDashboard() {
                   </div>
                 </div>
 
-                {/* Profile Banner */}
+                <MeetingDashboardSection sectionTitle="Invited Meetings" mode="INVITED" basePath="/meetings" />
+
                 <div className="banner">
                   <span className="banner-watermark">UNITY AND DISCIPLINE</span>
                 </div>
 
-                {/* Profile Card */}
                 <div className="profile-card">
                   <div className="profile-card-header">
                     <div className="profile-photo-wrapper">

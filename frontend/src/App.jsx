@@ -28,6 +28,12 @@ import AnoChat from "./components/Ano/AnoChat";
 import AnoAttendance from "./components/Ano/anoAttendance";
 import AnoDashboardHome from "./components/Ano/AnoDashboardHome";
 
+// 6. Meeting Module
+import MeetingListPage from "./components/Meetings/MeetingListPage";
+import MeetingCreatePage from "./components/Meetings/MeetingCreatePage";
+import MeetingDetailsPage from "./components/Meetings/MeetingDetailsPage";
+import MeetingRoomPage from "./components/Meetings/MeetingRoomPage";
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -53,6 +59,12 @@ const App = () => {
         <Route path="/alumni-dashboard" element={<AlumniDashboard />} />
         <Route path="/alumni/chat" element={<AlumniChat />} />
 
+        {/* MEETING ROUTES */}
+        <Route path="/meetings" element={<MeetingListPage />} />
+        <Route path="/meetings/create" element={<MeetingCreatePage />} />
+        <Route path="/meetings/:meetingId" element={<MeetingDetailsPage />} />
+        <Route path="/meetings/:meetingId/room" element={<MeetingRoomPage />} />
+
         {/* ANO DASHBOARD ROUTES (Nested Layout) */}
         <Route path="/ano/*" element={<AnoDashboard />}>
           <Route index element={<AnoDashboardHome />} />
@@ -60,6 +72,10 @@ const App = () => {
           <Route path="manage-cadets" element={<ManageCadets />} />
           <Route path="ano-attendance" element={<AnoAttendance />} />
           <Route path="chat" element={<AnoChat />} />
+          <Route path="meetings" element={<MeetingListPage basePath="/ano/meetings" />} />
+          <Route path="meetings/create" element={<MeetingCreatePage basePath="/ano/meetings" />} />
+          <Route path="meetings/:meetingId" element={<MeetingDetailsPage basePath="/ano/meetings" />} />
+          <Route path="meetings/:meetingId/room" element={<MeetingRoomPage basePath="/ano/meetings" />} />
         </Route>
       </Routes>
     </BrowserRouter>

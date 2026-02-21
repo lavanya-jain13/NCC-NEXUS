@@ -14,6 +14,7 @@ import {
   BarChart3,
   Signal,
   CalendarDays,
+  Video,
 } from "lucide-react";
 import ChatLayout from "../ChatCommon/ChatLayout";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +25,8 @@ import Feed from "./Feed";
 import ResetPasswordModal from "./ResetPasswordModal";
 import Chatbot from "./Chatbot";
 import CadetAttendance from "./cadetAttendence";
+import MeetingListPage from "../Meetings/MeetingListPage";
+import MeetingDashboardSection from "../Meetings/MeetingDashboardSection";
 import { closeCadetSidebar } from "../../features/ui/uiSlice";
 
 export default function CadetDashboard() {
@@ -198,7 +201,6 @@ export default function CadetDashboard() {
         )}
         <div className="layout">
 
-        {/* ================= SIDEBAR ================= */}
         <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
           <div className="sidebar-top">
             <div className="sidebar-header">
@@ -248,6 +250,17 @@ export default function CadetDashboard() {
               </button>
 
               <button
+                className={`nav-item ${activeTab === "meetings" ? "active" : ""}`}
+                onClick={() => {
+                  setActiveTab("meetings");
+                  setSidebarOpen(false);
+                }}
+              >
+                <Video size={18} />
+                <span>Meetings</span>
+              </button>
+
+              <button
                 className={`nav-item ${activeTab === "chatbot" ? "active" : ""}`}
                 onClick={() => {
                   setActiveTab("chatbot");
@@ -289,7 +302,6 @@ export default function CadetDashboard() {
 
         </aside>
 
-        {/* ================= BACKDROP ================= */}
         {sidebarOpen && (
           <div
             className="cadet-sidebar-backdrop"
@@ -297,9 +309,7 @@ export default function CadetDashboard() {
           />
         )}
 
-        {/* ================= MAIN ================= */}
         <main className={`main ${sidebarOpen ? "sidebar-open" : ""}`}>
-          {/* Tricolor top stripe */}
           <div className="tricolor-bar" />
 
           <div className="cadet-topbar">
@@ -334,6 +344,12 @@ export default function CadetDashboard() {
 
           {activeTab === "chatbot" && <Chatbot />}
 
+          {activeTab === "meetings" && (
+            <div className="meeting-tab-shell">
+              <MeetingListPage embedded basePath="/meetings" />
+            </div>
+          )}
+
           {activeTab === "feed" && (
             <Feed
               profileImage={profileImage}
@@ -350,7 +366,6 @@ export default function CadetDashboard() {
                 <p className="loading-text">Loading profile...</p>
               ) : null}
 
-              {/* Welcome Section */}
               <div className="welcome-card">
                 <div className="welcome-text">
                   <h1>Welcome back, {firstName}!</h1>
@@ -359,7 +374,6 @@ export default function CadetDashboard() {
                 <span className="welcome-motto">UNITY &amp; DISCIPLINE</span>
               </div>
 
-              {/* Stat Cards */}
               <div className="stat-cards">
                 <div className="stat-card">
                   <div className="stat-icon stat-icon-red">
@@ -399,12 +413,12 @@ export default function CadetDashboard() {
                 </div>
               </div>
 
-              {/* Profile Banner — gradient */}
+              <MeetingDashboardSection sectionTitle="Invited Meetings" mode="INVITED" basePath="/meetings" />
+
               <div className="banner">
                 <div className="banner-watermark">UNITY AND DISCIPLINE</div>
               </div>
 
-              {/* Profile Card overlapping the banner */}
               <div className="profile-card">
                 <div className="profile-card-header">
                   <div className="profile-photo-wrapper">

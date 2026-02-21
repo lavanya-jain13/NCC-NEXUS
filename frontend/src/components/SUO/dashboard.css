@@ -1435,3 +1435,15 @@
     height: 130px;
   }
 }
+
+.suo-dashboard .meeting-tab-shell {
+  padding: 0 32px 32px;
+  display: grid;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .suo-dashboard .meeting-tab-shell {
+    padding: 0 18px 20px;
+  }
+}
