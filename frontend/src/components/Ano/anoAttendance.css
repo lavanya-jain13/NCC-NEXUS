@@ -87,6 +87,17 @@
   transform: translateY(-2px);
 }
 
+.ano-attendance-btn-danger {
+  background: linear-gradient(135deg, #e53935, #b71c1c);
+  color: #ffffff;
+  box-shadow: 0 3px 14px rgba(229, 57, 53, 0.22);
+}
+
+.ano-attendance-btn-danger:hover {
+  box-shadow: 0 6px 24px rgba(229, 57, 53, 0.35);
+  transform: translateY(-2px);
+}
+
 .ano-attendance-table-card {
   margin-top: 20px;
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -139,8 +150,25 @@
 }
 
 .ano-drill-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   line-height: 1.1;
   font-weight: 600;
+}
+
+.ano-drill-delete {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(229, 57, 53, 0.15);
+  color: #b71c1c;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .ano-drill-date {

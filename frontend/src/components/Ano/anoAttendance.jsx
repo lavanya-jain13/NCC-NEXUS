@@ -3,7 +3,6 @@ import "./anoAttendance.css";
 import {
 	ATTENDANCE_STORAGE_KEY,
 	loadAttendanceSessions,
-	MONTHS,
 	saveAttendanceSessions,
 } from "../attendanceStore";
 
@@ -15,9 +14,10 @@ function calculateAttendance(attArr) {
 }
 
 const AnoAttendance = () => {
-	const [selectedSession, setSelectedSession] = useState("February");
 	const [sessionState, setSessionState] = useState(loadAttendanceSessions);
-	const currentSession = sessionState[selectedSession] || sessionState[MONTHS[0]];
+	const [selectedSession, setSelectedSession] = useState(() => Object.keys(loadAttendanceSessions())[0] || "");
+	const sessionNames = Object.keys(sessionState);
+	const currentSession = sessionState[selectedSession] || sessionState[sessionNames[0]];
 	const drills = currentSession.drills;
 	const cadets = currentSession.cadets;
 
@@ -35,6 +35,21 @@ const AnoAttendance = () => {
 		window.addEventListener("storage", syncAttendance);
 		return () => window.removeEventListener("storage", syncAttendance);
 	}, []);
+
+	useEffect(() => {
+		if (!sessionNames.length) return;
+		if (!selectedSession || !sessionState[selectedSession]) {
+			setSelectedSession(sessionNames[0]);
+		}
+	}, [selectedSession, sessionNames, sessionState]);
+
+	const getDefaultDrillDate = () => {
+		const now = new Date();
+		const yyyy = now.getFullYear();
+		const mm = String(now.getMonth() + 1).padStart(2, "0");
+		const dd = String(now.getDate()).padStart(2, "0");
+		return `${yyyy}-${mm}-${dd} 09:00`;
+	};
 
 	const setCurrentSession = (updater) => {
 		setSessionState((prev) => ({
@@ -56,6 +71,108 @@ const AnoAttendance = () => {
 							),
 						}
 			),
+		}));
+	};
+
+	const createSession = () => {
+		const nameInput = window.prompt("Enter session name (example: RDC Camp 2026):");
+		if (!nameInput) return;
+		const sessionName = nameInput.trim();
+		if (!sessionName) return;
+
+		const exists = sessionNames.some(
+			(name) => name.toLowerCase() === sessionName.toLowerCase()
+		);
+		if (exists) {
+			window.alert("A session with this name already exists.");
+			return;
+		}
+
+		const knownCadets = Array.from(
+			new Set(
+				Object.values(sessionState)
+					.flatMap((session) => session?.cadets || [])
+					.map((cadet) => (cadet?.name || "").trim())
+					.filter(Boolean)
+			)
+		);
+
+		const firstDrillDate = window.prompt(
+			"Enter first drill date-time (YYYY-MM-DD HH:mm)",
+			getDefaultDrillDate()
+		);
+		const now = Date.now();
+		const newSession = {
+			drills: [
+				{
+					id: `d-${now}-1`,
+					label: "Drill 1",
+					date: (firstDrillDate || getDefaultDrillDate()).trim(),
+				},
+			],
+			cadets: knownCadets.map((name, idx) => ({
+				id: `c-${now}-${idx + 1}`,
+				name,
+				attendance: ["P"],
+			})),
+		};
+
+		setSessionState((prev) => ({
+			...prev,
+			[sessionName]: newSession,
+		}));
+
+		setSelectedSession(sessionName);
+	};
+
+	const removeSession = () => {
+		if (sessionNames.length <= 1) {
+			window.alert("At least one session is required.");
+			return;
+		}
+
+		if (!window.confirm(`Delete session "${selectedSession}"?`)) return;
+
+		setSessionState((prev) => {
+			const next = { ...prev };
+			delete next[selectedSession];
+			return next;
+		});
+	};
+
+	const addDrill = () => {
+		const dateInput = window.prompt("Enter drill date-time (YYYY-MM-DD HH:mm)", getDefaultDrillDate());
+		if (!dateInput) return;
+
+		setCurrentSession((session) => {
+			const nextNumber = session.drills.length + 1;
+			return {
+				...session,
+				drills: [
+					...session.drills,
+					{ id: `d-${Date.now()}-${nextNumber}`, label: `Drill ${nextNumber}`, date: dateInput.trim() },
+				],
+				cadets: session.cadets.map((cadet) => ({
+					...cadet,
+					attendance: [...cadet.attendance, "P"],
+				})),
+			};
+		});
+	};
+
+	const removeDrill = (drillIdx) => {
+		if (drills.length <= 1) {
+			window.alert("At least one drill is required.");
+			return;
+		}
+
+		setCurrentSession((session) => ({
+			...session,
+			drills: session.drills.filter((_, idx) => idx !== drillIdx),
+			cadets: session.cadets.map((cadet) => ({
+				...cadet,
+				attendance: cadet.attendance.filter((_, idx) => idx !== drillIdx),
+			})),
 		}));
 	};
 
@@ -92,10 +209,19 @@ const AnoAttendance = () => {
 					value={selectedSession}
 					onChange={e => setSelectedSession(e.target.value)}
 				>
-					{MONTHS.map(month => (
-						<option key={month} value={month}>{month}</option>
+					{sessionNames.map(sessionName => (
+						<option key={sessionName} value={sessionName}>{sessionName}</option>
 					))}
 				</select>
+				<button className="ano-attendance-btn ano-attendance-btn-primary" onClick={createSession}>
+					Add Session
+				</button>
+				<button className="ano-attendance-btn ano-attendance-btn-danger" onClick={removeSession}>
+					Delete Session
+				</button>
+				<button className="ano-attendance-btn ano-attendance-btn-primary" onClick={addDrill}>
+					Add Drill
+				</button>
 				<button className="ano-attendance-btn ano-attendance-btn-primary" onClick={handleDownload}>
 					Download Attendance
 				</button>
@@ -105,9 +231,19 @@ const AnoAttendance = () => {
 					<thead>
 						<tr>
 							<th className="ano-col-cadet">Cadet Name</th>
-							{drills.map((drill) => (
+							{drills.map((drill, drillIdx) => (
 								<th key={drill.id} className="ano-col-drill">
-									<div className="ano-drill-head">{drill.label}</div>
+									<div className="ano-drill-head">
+										{drill.label}
+										<button
+											className="ano-drill-delete"
+											onClick={() => removeDrill(drillIdx)}
+											title="Remove Drill"
+											aria-label={`Remove ${drill.label}`}
+										>
+											x
+										</button>
+									</div>
 									<div className="ano-drill-date">{drill.date}</div>
 								</th>
 							))}

@@ -4,7 +4,6 @@ import "./suoAttendance.css";
 import {
   ATTENDANCE_STORAGE_KEY,
   loadAttendanceSessions,
-  MONTHS,
   saveAttendanceSessions,
 } from "../attendanceStore";
 
@@ -15,10 +14,11 @@ const calculateAttendance = (attendance, totalDrills) => {
 };
 
 const SuoAttendance = () => {
-  const [selectedSession, setSelectedSession] = useState("February");
   const [sessionState, setSessionState] = useState(loadAttendanceSessions);
+  const [selectedSession, setSelectedSession] = useState(() => Object.keys(loadAttendanceSessions())[0] || "");
+  const sessionNames = Object.keys(sessionState);
 
-  const currentSession = sessionState[selectedSession] || sessionState[MONTHS[0]];
+  const currentSession = sessionState[selectedSession] || sessionState[sessionNames[0]];
   const drills = currentSession.drills;
   const cadets = currentSession.cadets;
 
@@ -37,6 +37,13 @@ const SuoAttendance = () => {
     return () => window.removeEventListener("storage", syncAttendance);
   }, []);
 
+  useEffect(() => {
+    if (!sessionNames.length) return;
+    if (!selectedSession || !sessionState[selectedSession]) {
+      setSelectedSession(sessionNames[0]);
+    }
+  }, [selectedSession, sessionNames, sessionState]);
+
   const nextDrillDate = useMemo(() => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -50,6 +57,71 @@ const SuoAttendance = () => {
       ...prev,
       [selectedSession]: updater(prev[selectedSession]),
     }));
+  };
+
+  const createSession = () => {
+    const nameInput = window.prompt("Enter session name (example: RDC Camp 2026):");
+    if (!nameInput) return;
+    const sessionName = nameInput.trim();
+    if (!sessionName) return;
+
+    const exists = sessionNames.some(
+      (name) => name.toLowerCase() === sessionName.toLowerCase()
+    );
+    if (exists) {
+      window.alert("A session with this name already exists.");
+      return;
+    }
+
+    const knownCadets = Array.from(
+      new Set(
+        Object.values(sessionState)
+          .flatMap((session) => session?.cadets || [])
+          .map((cadet) => (cadet?.name || "").trim())
+          .filter(Boolean)
+      )
+    );
+
+    const firstDrillDate = window.prompt(
+      "Enter first drill date-time (YYYY-MM-DD HH:mm)",
+      nextDrillDate
+    );
+    const now = Date.now();
+    const newSession = {
+      drills: [
+        {
+          id: `d-${now}-1`,
+          label: "Drill 1",
+          date: (firstDrillDate || nextDrillDate).trim(),
+        },
+      ],
+      cadets: knownCadets.map((name, idx) => ({
+        id: `c-${now}-${idx + 1}`,
+        name,
+        attendance: ["P"],
+      })),
+    };
+
+    setSessionState((prev) => ({
+      ...prev,
+      [sessionName]: newSession,
+    }));
+    setSelectedSession(sessionName);
+  };
+
+  const removeSession = () => {
+    if (sessionNames.length <= 1) {
+      window.alert("At least one session is required.");
+      return;
+    }
+
+    if (!window.confirm(`Delete session "${selectedSession}"?`)) return;
+
+    setSessionState((prev) => {
+      const next = { ...prev };
+      delete next[selectedSession];
+      return next;
+    });
   };
 
   const toggleAttendance = (cadetIdx, drillIdx) => {
@@ -140,12 +212,22 @@ const SuoAttendance = () => {
           value={selectedSession}
           onChange={(e) => setSelectedSession(e.target.value)}
         >
-          {MONTHS.map((month) => (
-            <option key={month} value={month}>
-              {month}
+          {sessionNames.map((sessionName) => (
+            <option key={sessionName} value={sessionName}>
+              {sessionName}
             </option>
           ))}
         </select>
+
+        <button className="attendance-btn attendance-btn-secondary" onClick={createSession}>
+          <Plus size={18} />
+          <span>Add Session</span>
+        </button>
+
+        <button className="attendance-btn attendance-btn-danger" onClick={removeSession}>
+          <Trash2 size={18} />
+          <span>Delete Session</span>
+        </button>
 
         <button className="attendance-btn attendance-btn-secondary" onClick={addDrill}>
           <Plus size={18} />

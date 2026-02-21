@@ -1,19 +1,5 @@
 const STORAGE_KEY = "ncc_attendance_sessions_v1";
-
-export const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+const SESSION_FALLBACK_NAME = "NCC Training Cycle 2026";
 
 const CADETS = [
   "Shami Dubey",
@@ -35,7 +21,7 @@ const DEFAULT_ATTENDANCE = [
   ["P", "P", "A", "P", "A", "P"],
 ];
 
-const FEB_DRILLS = [
+const DEFAULT_DRILLS = [
   "2026-02-03 09:00",
   "2026-02-10 09:00",
   "2026-02-17 09:00",
@@ -44,41 +30,86 @@ const FEB_DRILLS = [
   "2026-02-16 09:00",
 ];
 
-export const buildInitialSessionState = () => {
-  const sessions = {};
+const slugifyName = (value) =>
+  String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 
-  MONTHS.forEach((month, monthIdx) => {
-    const mm = String(monthIdx + 1).padStart(2, "0");
-    const drills =
-      month === "February"
-        ? FEB_DRILLS.map((date, idx) => ({ id: `d-${month}-${idx + 1}`, label: `Drill ${idx + 1}`, date }))
-        : [1, 2, 3, 4, 5].map((n) => ({
-            id: `d-${month}-${n}`,
-            label: `Drill ${n}`,
-            date: `2026-${mm}-${String(n * 4 - 1).padStart(2, "0")} 09:00`,
-          }));
+const toDrillLabel = (index) => `Drill ${index + 1}`;
 
-    const cadets = CADETS.map((name, idx) => ({
-      id: `c-${idx + 1}`,
-      name,
-      attendance:
-        month === "February"
-          ? [...DEFAULT_ATTENDANCE[idx]]
-          : drills.map((_, dIdx) => DEFAULT_ATTENDANCE[idx][dIdx % DEFAULT_ATTENDANCE[idx].length] || "P"),
-    }));
+const buildCadetsForDrills = (drillCount) =>
+  CADETS.map((name, idx) => ({
+    id: `c-${idx + 1}`,
+    name,
+    attendance: Array.from({ length: drillCount }, (_, drillIdx) => {
+      const source = DEFAULT_ATTENDANCE[idx] || ["P"];
+      return source[drillIdx % source.length] || "P";
+    }),
+  }));
 
-    sessions[month] = { drills, cadets };
-  });
+const buildSessionFromCadetNames = (sessionName, cadetNames = []) => {
+  const normalizedSessionName = (sessionName || SESSION_FALLBACK_NAME).trim();
+  const baseDrillId = slugifyName(normalizedSessionName) || "session";
+  const drills = DEFAULT_DRILLS.map((date, idx) => ({
+    id: `d-${baseDrillId}-${idx + 1}`,
+    label: toDrillLabel(idx),
+    date,
+  }));
 
-  return sessions;
+  const names = Array.from(new Set(cadetNames.map((name) => (name || "").trim()).filter(Boolean)));
+  const cadets =
+    names.length > 0
+      ? names.map((name, idx) => ({
+          id: `c-${Date.now()}-${idx + 1}`,
+          name,
+          attendance: drills.map(() => "P"),
+        }))
+      : buildCadetsForDrills(drills.length);
+
+  return { drills, cadets };
 };
 
-const isValidState = (value) => {
-  if (!value || typeof value !== "object") return false;
-  return MONTHS.every((month) => {
-    const session = value[month];
-    return session && Array.isArray(session.drills) && Array.isArray(session.cadets);
+export const buildInitialSessionState = () => ({
+  [SESSION_FALLBACK_NAME]: buildSessionFromCadetNames(SESSION_FALLBACK_NAME),
+});
+
+const isValidSession = (session) => {
+  if (!session || typeof session !== "object") return false;
+  if (!Array.isArray(session.drills) || !Array.isArray(session.cadets)) return false;
+  return true;
+};
+
+const normalizeState = (value) => {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return buildInitialSessionState();
+  }
+
+  const entries = Object.entries(value).filter(([sessionName, sessionValue]) => {
+    if (!sessionName || typeof sessionName !== "string") return false;
+    return isValidSession(sessionValue);
   });
+
+  if (!entries.length) return buildInitialSessionState();
+
+  return entries.reduce((acc, [sessionName, session]) => {
+    const normalizedCadets = session.cadets.map((cadet, cadetIdx) => ({
+      id: cadet?.id || `c-${slugifyName(sessionName) || "session"}-${cadetIdx + 1}`,
+      name: (cadet?.name || "").trim() || `Cadet ${cadetIdx + 1}`,
+      attendance: session.drills.map((_, drillIdx) =>
+        cadet?.attendance?.[drillIdx] === "A" ? "A" : "P"
+      ),
+    }));
+
+    const normalizedDrills = session.drills.map((drill, drillIdx) => ({
+      id: drill?.id || `d-${slugifyName(sessionName) || "session"}-${drillIdx + 1}`,
+      label: (drill?.label || "").trim() || toDrillLabel(drillIdx),
+      date: (drill?.date || "").trim() || "",
+    }));
+
+    acc[sessionName] = { drills: normalizedDrills, cadets: normalizedCadets };
+    return acc;
+  }, {});
 };
 
 export const loadAttendanceSessions = () => {
@@ -86,8 +117,7 @@ export const loadAttendanceSessions = () => {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return buildInitialSessionState();
     const parsed = JSON.parse(raw);
-    if (!isValidState(parsed)) return buildInitialSessionState();
-    return parsed;
+    return normalizeState(parsed);
   } catch {
     return buildInitialSessionState();
   }
@@ -108,8 +138,8 @@ export const addCadetToAttendance = (cadetName) => {
   const sessions = loadAttendanceSessions();
   const normalizedName = name.toLowerCase();
 
-  MONTHS.forEach((month) => {
-    const session = sessions[month];
+  Object.keys(sessions).forEach((sessionName) => {
+    const session = sessions[sessionName];
     if (!session || !Array.isArray(session.cadets)) return;
 
     const exists = session.cadets.some(
@@ -118,7 +148,7 @@ export const addCadetToAttendance = (cadetName) => {
     if (exists) return;
 
     const newCadet = {
-      id: `c-${Date.now()}-${month}`,
+      id: `c-${Date.now()}-${slugifyName(sessionName) || "session"}`,
       name,
       attendance: session.drills.map(() => "P"),
     };
