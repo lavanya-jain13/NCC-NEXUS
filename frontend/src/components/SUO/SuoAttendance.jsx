@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Download, Plus, Trash2, ClipboardList, Check, X } from "lucide-react";
+import { Download, Plus, Trash2, ClipboardList, Check, X, ChevronDown, ChevronUp } from "lucide-react";
 import "./suoAttendance.css";
 import { attendanceApi } from "../../api/attendanceApi";
 import {
@@ -43,6 +43,7 @@ const SuoAttendance = () => {
   const [selectedSessionId, setSelectedSessionId] = useState("");
   const [sessionDetail, setSessionDetail] = useState(null);
   const [leaveRequests, setLeaveRequests] = useState([]);
+  const [isAttendanceExpanded, setIsAttendanceExpanded] = useState(true);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState("");
@@ -338,63 +339,78 @@ const SuoAttendance = () => {
       </div>
 
       {activeView === "attendance" ? (
-        <div className="attendance-table-card">
-          <table className="attendance-table">
-            <thead>
-              <tr>
-                <th className="col-cadet">Cadet Name</th>
-                {drills.map((drill, drillIdx) => (
-                  <th key={drill.drill_id} className="col-drill">
-                    <div className="drill-head">
-                      <span>{drill.drill_name || `Drill ${drillIdx + 1}`}</span>
-                      <button
-                        className="drill-delete"
-                        onClick={() => removeDrill(drill.drill_id)}
-                        title="Remove Drill"
-                        aria-label={`Remove ${drill.drill_name || `Drill ${drillIdx + 1}`}`}
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                    <div className="drill-date">{`${drill.drill_date} ${String(drill.drill_time).slice(0, 5)}`}</div>
-                  </th>
-                ))}
-                <th>Total Drills</th>
-                <th>Total Attendance</th>
-                <th>Percentage</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cadets.map((cadet) => {
-                const { attended, total, percent } = calculateAttendance(cadet.attendance || [], drills.length);
-                return (
-                  <tr key={cadet.regimental_no}>
-                    <td className="cadet-name-cell">{cadet.name}</td>
-                    {drills.map((drill, drillIdx) => {
-                      const status = cadet.attendance?.[drillIdx] ?? null;
-                      return (
-                        <td key={`${cadet.regimental_no}-${drill.drill_id}`}>
-                          {status ? (
-                            <button
-                              className={`attendance-pill ${status === "P" ? "present" : "absent"}`}
-                              onClick={() => toggleAttendance(cadet.regimental_no, drill.drill_id, status)}
-                            >
-                              {status}
-                            </button>
-                          ) : (
-                            <span className="attendance-pill">--</span>
-                          )}
-                        </td>
-                      );
-                    })}
-                    <td className="total-cell">{total}</td>
-                    <td className="total-cell">{attended}</td>
-                    <td className="total-cell">{percent}%</td>
+        <div className="attendance-section">
+          <button
+            type="button"
+            className="attendance-collapse-btn"
+            onClick={() => setIsAttendanceExpanded((prev) => !prev)}
+            aria-expanded={isAttendanceExpanded}
+            aria-label={isAttendanceExpanded ? "Collapse attendance list" : "Expand attendance list"}
+          >
+            <span>Attendance List</span>
+            {isAttendanceExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </button>
+
+          <div className={`attendance-table-card ${isAttendanceExpanded ? "" : "is-collapsed"}`}>
+            {isAttendanceExpanded ? (
+              <table className="attendance-table">
+                <thead>
+                  <tr>
+                    <th className="col-cadet">Cadet Name</th>
+                    {drills.map((drill, drillIdx) => (
+                      <th key={drill.drill_id} className="col-drill">
+                        <div className="drill-head">
+                          <span>{drill.drill_name || `Drill ${drillIdx + 1}`}</span>
+                          <button
+                            className="drill-delete"
+                            onClick={() => removeDrill(drill.drill_id)}
+                            title="Remove Drill"
+                            aria-label={`Remove ${drill.drill_name || `Drill ${drillIdx + 1}`}`}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                        <div className="drill-date">{`${drill.drill_date} ${String(drill.drill_time).slice(0, 5)}`}</div>
+                      </th>
+                    ))}
+                    <th>Total Drills</th>
+                    <th>Total Attendance</th>
+                    <th>Percentage</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {cadets.map((cadet) => {
+                    const { attended, total, percent } = calculateAttendance(cadet.attendance || [], drills.length);
+                    return (
+                      <tr key={cadet.regimental_no}>
+                        <td className="cadet-name-cell">{cadet.name}</td>
+                        {drills.map((drill, drillIdx) => {
+                          const status = cadet.attendance?.[drillIdx] ?? null;
+                          return (
+                            <td key={`${cadet.regimental_no}-${drill.drill_id}`}>
+                              {status ? (
+                                <button
+                                  className={`attendance-pill ${status === "P" ? "present" : "absent"}`}
+                                  onClick={() => toggleAttendance(cadet.regimental_no, drill.drill_id, status)}
+                                >
+                                  {status}
+                                </button>
+                              ) : (
+                                <span className="attendance-pill">--</span>
+                              )}
+                            </td>
+                          );
+                        })}
+                        <td className="total-cell">{total}</td>
+                        <td className="total-cell">{attended}</td>
+                        <td className="total-cell">{percent}%</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            ) : null}
+          </div>
         </div>
       ) : (
         <div className="attendance-table-card leave-table-card">
