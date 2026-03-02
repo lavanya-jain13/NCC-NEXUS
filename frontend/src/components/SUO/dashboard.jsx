@@ -16,6 +16,7 @@ import {
   Users,
   Video,
   ClipboardCheck,
+  Mic,
 } from "lucide-react";
 import ChatLayout from "../ChatCommon/ChatLayout";
 import { useNavigate } from "react-router-dom";
@@ -33,13 +34,23 @@ import { canCreateMeeting, getCurrentRole } from "../Meetings/meetingUtils";
 import { closeSUOSidebar, toggleSUOSidebar } from "../../features/ui/uiSlice";
 import { API_BASE_URL } from "../../api/config";
 import QuizModule from "../quiz/QuizModule";
+import VoiceCommandsModule from "../VoiceCommands/VoiceCommandsModule";
+import CommunityFeed from "../community/CommunityFeed";
+import { clearAuthStorage, hasAuthFor } from "../../utils/authState";
+import { getStoredDashboardTab, persistDashboardTab } from "../../utils/dashboardState";
+import { resolveProfileImage } from "../../utils/profileImage";
 
 export default function SUODashboard() {
+  const SUO_TAB_STORAGE_KEY = "suo_dashboard_active_tab";
+  const SUO_ALLOWED_TABS = ["profile", "feed", "chatbot", "attendance", "meetings", "quiz", "voice", "chat", "community"];
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isSUOSidebarOpen = useSelector((state) => state.ui.isSUOSidebarOpen);
 
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState(() =>
+    getStoredDashboardTab(SUO_TAB_STORAGE_KEY, "profile", SUO_ALLOWED_TABS)
+  );
   const [showReset, setShowReset] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
@@ -55,12 +66,6 @@ export default function SUODashboard() {
   });
 
   const fileInputRef = useRef(null);
-
-  const withCacheBuster = (url) => {
-    if (!url) return defaultProfileImage;
-    const joiner = String(url).includes("?") ? "&" : "?";
-    return `${url}${joiner}v=${Date.now()}`;
-  };
 
   const fetchProfile = async (token) => {
     try {
@@ -78,12 +83,6 @@ export default function SUODashboard() {
         return false;
       }
 
-      if (data.role !== "SUO") {
-        alert("This account is not authorized for SUO dashboard.");
-        navigate("/dashboard");
-        return false;
-      }
-
       setProfileData({
         name: data.name || "SUO",
         rank: data.rank || "Senior Under Officer",
@@ -91,7 +90,8 @@ export default function SUODashboard() {
         bio: data.bio || "Add your bio using edit button.",
       });
 
-      setProfileImage(withCacheBuster(data.profile_image_url));
+      const resolvedImage = await resolveProfileImage(data.profile_image_url, defaultProfileImage);
+      setProfileImage(resolvedImage);
       return true;
     } catch (error) {
       console.error("Fetch Profile Error:", error);
@@ -124,7 +124,7 @@ export default function SUODashboard() {
     throw new Error(data.message || "Unknown error");
   }
 
-  return data; // ✅ MUST return
+  return data; // MUST return
 };
 
   const handleProfileImageChange = async (e) => {
@@ -140,6 +140,7 @@ export default function SUODashboard() {
     return;
   }
 
+  const previousImage = profileImage;
   const previewUrl = URL.createObjectURL(file);
   setProfileImage(previewUrl);
 
@@ -151,7 +152,10 @@ export default function SUODashboard() {
     });
 
     if (data?.profile_image_url) {
-      setProfileImage(data.profile_image_url + "?v=" + Date.now());
+      const resolvedImage = await resolveProfileImage(data.profile_image_url, previousImage || defaultProfileImage);
+      setProfileImage(resolvedImage);
+    } else {
+      await fetchProfile(token);
     }
   } catch (error) {
     console.error("Image Upload Error:", error);
@@ -195,7 +199,10 @@ export default function SUODashboard() {
     }));
 
     if (data?.profile_image_url) {
-      setProfileImage(data.profile_image_url + "?v=" + Date.now());
+      const resolvedImage = await resolveProfileImage(data.profile_image_url, profileImage || defaultProfileImage);
+      setProfileImage(resolvedImage);
+    } else {
+      await fetchProfile(token);
     }
 
     setSelectedImageFile(null);
@@ -213,15 +220,18 @@ export default function SUODashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
 
-    if (!token || role !== "SUO") {
+    if (!hasAuthFor(["SUO"])) {
       navigate("/");
       return;
     }
 
     fetchProfile(token);
   }, [navigate]);
+
+  useEffect(() => {
+    persistDashboardTab(SUO_TAB_STORAGE_KEY, activeTab);
+  }, [activeTab]);
 
   const role = getCurrentRole();
   const canCreate = canCreateMeeting(role);
@@ -321,6 +331,16 @@ export default function SUODashboard() {
                   <ClipboardCheck size={18} />
                   <span>Quiz & Mock Tests</span>
                 </button>
+                <button
+                  className={`nav-item ${activeTab === "voice" ? "active" : ""}`}
+                  onClick={() => {
+                    setActiveTab("voice");
+                    dispatch(closeSUOSidebar());
+                  }}
+                >
+                  <Mic size={18} />
+                  <span>Voice Commands</span>
+                </button>
 
                 <button
                   className={`nav-item ${activeTab === "chat" ? "active" : ""}`}
@@ -331,6 +351,17 @@ export default function SUODashboard() {
                 >
                   <MessageSquare size={18} />
                   <span>Chat</span>
+                </button>
+
+                <button
+                  className={`nav-item ${activeTab === "community" ? "active" : ""}`}
+                  onClick={() => {
+                    setActiveTab("community");
+                    dispatch(closeSUOSidebar());
+                  }}
+                >
+                  <Users size={18} />
+                  <span>Community</span>
                 </button>
 
                 <button
@@ -348,7 +379,7 @@ export default function SUODashboard() {
 
           </aside>
 
-          <main className={`main ${isSUOSidebarOpen ? "sidebar-open" : ""}`}>
+          <main className={`main ${isSUOSidebarOpen ? "sidebar-open" : ""} ${activeTab === "chatbot" ? "chatbot-active" : ""}`}>
             <div className="tricolor-bar" />
             <div className="cadet-topbar">
               <button
@@ -363,11 +394,7 @@ export default function SUODashboard() {
                 className="topbar-logout"
                 onClick={() => {
                   dispatch(closeSUOSidebar());
-                  localStorage.removeItem("token");
-                  localStorage.removeItem("role");
-                  localStorage.removeItem("system_role");
-                  localStorage.removeItem("rank");
-                  localStorage.removeItem("user");
+                  clearAuthStorage();
                   navigate("/");
                 }}
               >
@@ -384,13 +411,19 @@ export default function SUODashboard() {
 
             {activeTab === "attendance" && <SuoAttendance />}
 
-            {activeTab === "chatbot" && <Chatbot />}
+            {activeTab === "chatbot" && (
+              <div className="chatbot-panel">
+                <Chatbot />
+              </div>
+            )}
             {activeTab === "quiz" && (
               <QuizModule
                 participantName={profileData.name || "SUO"}
                 participantRank={profileData.rank || "Senior Under Officer"}
               />
             )}
+
+            {activeTab === "voice" && <VoiceCommandsModule />}
 
             {activeTab === "meetings" && (
               <div className="meeting-tab-shell">
@@ -402,6 +435,8 @@ export default function SUODashboard() {
             {activeTab === "feed" && (
               <Feed profileImage={profileImage} profileName={profileData.name} mode="feed" />
             )}
+
+            {activeTab === "community" && <CommunityFeed />}
 
             {activeTab === "profile" && (
               <div className="profile-page">
@@ -542,5 +577,6 @@ export default function SUODashboard() {
     </>
   );
 }
+
 
 

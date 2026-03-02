@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FaUserPlus, FaUsers, FaComments, FaClipboardList, FaTachometerAlt, FaVideo } from "react-icons/fa";
+import { FaUserPlus, FaUsers, FaComments, FaClipboardList, FaTachometerAlt, FaVideo, FaBullhorn } from "react-icons/fa";
 import nccLogo from "../assets/ncc-logo.png";
 
 const Sidebar = ({ isOpen = true, onClose }) => {
@@ -66,6 +66,14 @@ const Sidebar = ({ isOpen = true, onClose }) => {
             onClick={() => (typeof onClose === "function" ? onClose() : undefined)}
           >
             <FaComments /> <span>Chat</span>
+          </NavLink>
+
+          <NavLink
+            to="community"
+            className="menu-item"
+            onClick={() => (typeof onClose === "function" ? onClose() : undefined)}
+          >
+            <FaBullhorn /> <span>Community</span>
           </NavLink>
         </nav>
       </div>
