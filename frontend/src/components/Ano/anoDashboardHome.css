@@ -38,6 +38,11 @@
   width: 100%;
 }
 
+.ano-dashboard-layout .ano-home .meeting-dash-section {
+  margin-top: 20px;
+  margin-bottom: 18px;
+}
+
 /* ── Welcome Banner ── */
 .ano-home-banner {
   position: relative;
@@ -374,18 +379,94 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .ano-home {
-    padding: 20px 16px 32px;
+    padding: 16px 14px 22px;
   }
 
   .ano-home-banner {
-    padding: 28px 24px;
+    padding: 18px 16px;
     border-radius: 14px;
   }
 
   .ano-home-banner-content h1 {
-    font-size: 22px;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .ano-home-banner-content p {
+    font-size: 12px;
+    line-height: 1.35;
+    margin-top: 6px;
+  }
+
+  .ano-home-motto {
+    margin-top: 8px;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+
+  .ano-home-watermark {
+    right: 10px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  .ano-home-divider {
+    margin: 14px 0 12px;
+    height: 2px;
+    max-width: 68px;
+  }
+
+  .ano-home-stats {
+    gap: 10px;
+  }
+
+  .ano-home-stat-card {
+    padding: 14px 12px;
+    gap: 10px;
+    border-radius: 12px;
+  }
+
+  .ano-home-stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+
+  .ano-home-stat-info h3 {
+    font-size: 18px;
+  }
+
+  .ano-home-stat-info p {
+    font-size: 11px;
+  }
+
+  .ano-dashboard-layout .ano-home .meeting-dash-section {
+    margin-top: 14px;
+    margin-bottom: 14px;
+    padding: 14px;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .ano-home {
+    padding: 14px 12px 20px;
+  }
+
+  .ano-home-banner {
+    padding: 16px 14px;
+    border-radius: 14px;
+  }
+
+  .ano-home-banner-content h1 {
+    font-size: 18px;
+  }
+
+  .ano-home-banner-content p {
+    font-size: 11.5px;
   }
 
   .ano-home-watermark {
@@ -395,5 +476,44 @@
   .ano-home-stats {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .ano-home {
+    padding: 12px 10px 18px;
+  }
+
+  .ano-home-banner {
+    padding: 14px 12px;
+    border-radius: 12px;
+  }
+
+  .ano-home-banner-content h1 {
+    font-size: 17px;
+  }
+
+  .ano-home-motto {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  .ano-home-stat-card {
+    padding: 12px 10px;
+  }
+
+  .ano-home-stat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .ano-home-stat-info h3 {
+    font-size: 16px;
+  }
+
+  .ano-dashboard-layout .ano-home .meeting-dash-section {
+    margin-bottom: 12px;
+    padding: 12px;
   }
 }

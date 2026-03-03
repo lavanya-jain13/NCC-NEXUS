@@ -1299,6 +1299,32 @@ export default function Feed({
             />
           </div>
         )}
+        <aside className="feed-side-panel">
+          <h3 className="feed-side-title">Pinned Announcements</h3>
+          {pinnedAnnouncements.length === 0 ? (
+            <p className="feed-side-empty">No announcements yet.</p>
+          ) : (
+            pinnedAnnouncements.map((announcement) => (
+              <div className="feed-side-item" key={`pinned-${announcement.id}`}>
+                <div className="feed-side-head">
+                  <div className="feed-side-avatar">{getInitial(announcement.name)}</div>
+                  <div className="feed-side-author">{announcement.name}</div>
+                  <span className="feed-side-tag">Pinned</span>
+                </div>
+                <p className="feed-side-text">{announcement.text || "Shared an update."}</p>
+                <button
+                  type="button"
+                  className="feed-side-link"
+                  onClick={() => scrollToPost(announcement.id)}
+                >
+                  View post ›
+                </button>
+              </div>
+            ))
+          )}
+        </aside>
+
+
 
         {/* ===== POSTS ===== */}
         {visiblePosts.map((p) => (
@@ -1378,31 +1404,6 @@ export default function Feed({
             </div>
           </div>
         ))}
-
-        <aside className="feed-side-panel">
-          <h3 className="feed-side-title">Pinned Announcements</h3>
-          {pinnedAnnouncements.length === 0 ? (
-            <p className="feed-side-empty">No announcements yet.</p>
-          ) : (
-            pinnedAnnouncements.map((announcement) => (
-              <div className="feed-side-item" key={`pinned-${announcement.id}`}>
-                <div className="feed-side-head">
-                  <div className="feed-side-avatar">{getInitial(announcement.name)}</div>
-                  <div className="feed-side-author">{announcement.name}</div>
-                  <span className="feed-side-tag">Pinned</span>
-                </div>
-                <p className="feed-side-text">{announcement.text || "Shared an update."}</p>
-                <button
-                  type="button"
-                  className="feed-side-link"
-                  onClick={() => scrollToPost(announcement.id)}
-                >
-                  View post ›
-                </button>
-              </div>
-            ))
-          )}
-        </aside>
       </div>
     </div>
   );

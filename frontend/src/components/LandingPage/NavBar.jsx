@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaBell } from "react-icons/fa";
+import { FaBell, FaBars, FaTimes } from "react-icons/fa";
 import { connectNotificationSocket, getNotificationSocket, disconnectNotificationSocket } from "../../features/notifications/notificationSocket";
 import logoImage from "../assets/ncc-logo.png";
 
 const NavBar = ({ onCadetLogin, onAnoLogin }) => {
   const [open, setOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -13,6 +14,7 @@ const NavBar = ({ onCadetLogin, onAnoLogin }) => {
 
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
+  const mobileMenuRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -52,6 +54,9 @@ const NavBar = ({ onCadetLogin, onAnoLogin }) => {
       }
       if (notificationRef.current && !notificationRef.current.contains(e.target)) {
         setNotificationOpen(false);
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target)) {
+        setMobileMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -227,6 +232,82 @@ const NavBar = ({ onCadetLogin, onAnoLogin }) => {
           </div>
         )}
       </nav>
+
+      <div className="mobile-nav" ref={mobileMenuRef}>
+        <button
+          type="button"
+          className="nav-mobile-toggle"
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          onClick={() => setMobileMenuOpen((prev) => !prev)}
+        >
+          {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+
+        {mobileMenuOpen ? (
+          <div className="mobile-nav-menu">
+            <button
+              className="mobile-nav-btn"
+              onClick={() => {
+                scrollToSection("home");
+                setMobileMenuOpen(false);
+              }}
+            >
+              Home
+            </button>
+            <button
+              className="mobile-nav-btn"
+              onClick={() => {
+                scrollToSection("about");
+                setMobileMenuOpen(false);
+              }}
+            >
+              About NCC
+            </button>
+            <button
+              className="mobile-nav-btn"
+              onClick={() => {
+                scrollToSection("structure");
+                setMobileMenuOpen(false);
+              }}
+            >
+              Structure
+            </button>
+
+            {token ? (
+              <button
+                className="mobile-nav-btn"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setNotificationOpen((prev) => !prev);
+                }}
+              >
+                Notifications {unreadCount > 0 ? `(${unreadCount})` : ""}
+              </button>
+            ) : (
+              <>
+                <button
+                  className="mobile-nav-btn mobile-login-btn"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onCadetLogin();
+                  }}
+                >
+                  Cadet Login
+                </button>
+                <button
+                  className="mobile-nav-btn mobile-login-btn"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onAnoLogin();
+                  }}
+                >
+                  ANO Login
+                </button>
+              </>
+            )}
+          </div>
+        ) : null}
+      </div>
     </header>
   );
 };

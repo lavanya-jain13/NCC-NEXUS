@@ -50,24 +50,37 @@ export default function PostCard({
   return (
     <article className={`community-post-card ${post.pinned ? "pinned" : ""}`}>
       <header className="community-post-head">
-        <div className="community-author-meta">
-          <div className="community-avatar">
-            {post.authorAvatar ? (
-              <img src={post.authorAvatar} alt={post.author || "Profile"} />
-            ) : (
-              (post.author || "N").slice(0, 1)
-            )}
-          </div>
-          <div>
-            <strong>{post.author}</strong>
-            <div className="community-meta-row">
-              <span className={`community-role-badge ${ROLE_CLASS[post.authorRole] || "cadet"}`}>{post.authorRole}</span>
-              <span className="community-time-meta">{timeAgo(post.timestamp)}</span>
+        <div className="community-author-block">
+          <div className="community-author-meta">
+            <div className="community-avatar">
+              {post.authorAvatar ? (
+                <img src={post.authorAvatar} alt={post.author || "Profile"} />
+              ) : (
+                (post.author || "N").slice(0, 1)
+              )}
+            </div>
+            <div>
+              <strong>{post.author}</strong>
+              <div className="community-meta-row">
+                <span className={`community-role-badge ${ROLE_CLASS[post.authorRole] || "cadet"}`}>{post.authorRole}</span>
+                <span className="community-time-meta">{timeAgo(post.timestamp)}</span>
+              </div>
             </div>
           </div>
+          {canEdit ? (
+            <div className="community-post-tools community-post-tools-left">
+              <button type="button" onClick={() => onEdit(post)}>
+                <FaPen size={12} />
+                Edit
+              </button>
+              <button type="button" onClick={() => onDelete(post.id)}>
+                <FaTrashCan size={12} />
+                Delete
+              </button>
+            </div>
+          ) : null}
         </div>
-        <div className="community-post-right">
-          <span className={`community-type-badge ${post.type}`}>{post.type}</span>
+        <div className={`community-post-right ${canPost ? "with-pin" : "without-pin"}`}>
           {canPost ? (
             <button
               type="button"
@@ -79,18 +92,7 @@ export default function PostCard({
               <FaThumbtack size={13} />
             </button>
           ) : null}
-          {canEdit ? (
-            <div className="community-post-tools">
-              <button type="button" onClick={() => onEdit(post)}>
-                <FaPen size={12} />
-                Edit
-              </button>
-              <button type="button" onClick={() => onDelete(post.id)}>
-                <FaTrashCan size={12} />
-                Delete
-              </button>
-            </div>
-          ) : null}
+          <span className={`community-type-badge ${post.type}`}>{post.type}</span>
         </div>
       </header>
 

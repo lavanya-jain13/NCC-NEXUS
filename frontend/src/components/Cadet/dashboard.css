@@ -413,9 +413,7 @@
 .cadet-dashboard .cadet-sidebar-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(26, 35, 126, 0.12);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: transparent;
   z-index: 9997;
 }
 
@@ -1220,57 +1218,172 @@
 }
 
 @media (max-width: 768px) {
+  .cadet-dashboard .cadet-topbar {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  .cadet-dashboard .cadet-sidebar-toggle {
+    min-height: 38px;
+    padding: 0 14px;
+    border-radius: 10px;
+    font-size: 12.5px;
+  }
+  .cadet-dashboard .topbar-logout {
+    min-height: 38px;
+    padding: 0 12px;
+    border-radius: 10px;
+    font-size: 12.5px;
+  }
+  .cadet-dashboard .topbar-logout svg {
+    width: 14px;
+    height: 14px;
+  }
   .cadet-dashboard .profile-page {
-    padding: 0 18px 28px;
+    padding: 0 14px 22px;
   }
   .cadet-dashboard .welcome-card {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
-    padding: 20px 22px;
+    gap: 8px;
+    padding: 16px;
+    margin: 14px 0 12px;
+    border-radius: 14px;
   }
   .cadet-dashboard .welcome-text h1 {
-    font-size: 20px;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+  .cadet-dashboard .welcome-text p {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .cadet-dashboard .welcome-motto {
+    font-size: 11px;
+    letter-spacing: 0.08em;
   }
   .cadet-dashboard .stat-cards {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .cadet-dashboard .stat-card {
+    padding: 14px 12px;
+    gap: 10px;
+    border-radius: 12px;
+  }
+  .cadet-dashboard .stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+  .cadet-dashboard .stat-info h3 {
+    font-size: 14px;
+  }
+  .cadet-dashboard .stat-info p {
+    font-size: 11px;
   }
   .cadet-dashboard .banner {
-    height: 150px;
+    height: 130px;
     border-radius: 14px 14px 0 0;
   }
+  .cadet-dashboard .banner-watermark {
+    right: 12px;
+    font-size: 14px;
+    letter-spacing: 0.09em;
+  }
   .cadet-dashboard .profile-card {
-    padding: 0 22px 28px;
+    padding: 0 14px 16px;
     border-radius: 0 0 14px 14px;
   }
   .cadet-dashboard .profile-card-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 12px;
   }
   .cadet-dashboard .profile-photo-wrapper {
-    margin-top: -50px;
+    margin-top: -42px;
   }
   .cadet-dashboard .profile-photo-ring {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     border-width: 4px;
   }
+  .cadet-dashboard .camera-icon {
+    bottom: 4px;
+    right: 4px;
+    padding: 5px;
+    border-width: 2px;
+  }
+  .cadet-dashboard .camera-icon svg {
+    width: 13px;
+    height: 13px;
+  }
+  .cadet-dashboard .profile-header-text {
+    padding-bottom: 2px;
+  }
   .cadet-dashboard .profile-name {
-    font-size: 22px;
+    font-size: 17px;
+    margin: 0 0 6px;
   }
   .cadet-dashboard .profile-meta {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
-    gap: 8px;
+    gap: 6px;
   }
   .cadet-dashboard .profile-role-badge {
-    font-size: 10px;
-    padding: 4px 14px;
+    font-size: 9.5px;
+    padding: 4px 10px;
+    letter-spacing: 0.08em;
+  }
+  .cadet-dashboard .info-pill {
+    gap: 6px;
+    padding: 5px 10px;
+    font-size: 11px;
+    max-width: 100%;
+  }
+  .cadet-dashboard .profile-card-divider {
+    height: 2px;
+    margin: 14px 0;
+    max-width: 72px;
   }
   .cadet-dashboard .bio-container {
     max-width: 100%;
+  }
+  .cadet-dashboard .bio-display {
+    align-items: center;
+    gap: 8px;
+  }
+  .cadet-dashboard .bio {
+    font-size: 13px;
+    line-height: 1.55;
+    padding-left: 10px;
+    border-left-width: 2px;
+  }
+  .cadet-dashboard .bio-edit-icon {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 9px;
+  }
+  .cadet-dashboard .bio-edit-actions {
+    width: 100%;
+    gap: 8px;
+  }
+  .cadet-dashboard .bio-save-btn,
+  .cadet-dashboard .bio-cancel-btn {
+    flex: 1;
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
+  .cadet-dashboard .section-title {
+    margin-top: 22px;
+    font-size: 17px;
+    padding-bottom: 8px;
+  }
+  .cadet-dashboard .section-title::after {
+    height: 2px;
   }
 }
 
@@ -1286,7 +1399,41 @@
     grid-template-columns: 1fr;
   }
   .cadet-dashboard .banner {
-    height: 130px;
+    height: 118px;
+  }
+  .cadet-dashboard .banner-watermark {
+    right: 10px;
+    font-size: 12px;
+    letter-spacing: 0.07em;
+  }
+  .cadet-dashboard .profile-page {
+    padding: 0 10px 18px;
+  }
+  .cadet-dashboard .profile-card {
+    padding: 0 12px 14px;
+  }
+  .cadet-dashboard .profile-card-header {
+    gap: 10px;
+  }
+  .cadet-dashboard .profile-photo-ring {
+    width: 84px;
+    height: 84px;
+  }
+  .cadet-dashboard .profile-name {
+    font-size: 16px;
+  }
+  .cadet-dashboard .info-pill {
+    font-size: 10.5px;
+    padding: 4px 8px;
+  }
+  .cadet-dashboard .welcome-card {
+    padding: 14px;
+  }
+  .cadet-dashboard .welcome-text h1 {
+    font-size: 17px;
+  }
+  .cadet-dashboard .section-title {
+    font-size: 16px;
   }
 }
 

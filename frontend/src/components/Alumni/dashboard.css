@@ -360,9 +360,7 @@
 .alumni-dashboard .alumni-sidebar-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(26, 35, 126, 0.12);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: transparent;
   z-index: 9997;
 }
 
@@ -662,6 +660,7 @@
   position: relative;
   width: fit-content;
   margin-top: -55px;
+  flex-shrink: 0;
 }
 
 .alumni-dashboard .profile-photo-ring {
@@ -691,6 +690,30 @@
   border-radius: 50%;
 }
 
+.alumni-dashboard .camera-icon {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, var(--al-primary), var(--al-navy));
+  border: 3px solid var(--al-surface);
+  padding: 7px;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 5;
+  box-shadow: 0 3px 12px rgba(92, 107, 192, 0.35);
+}
+
+.alumni-dashboard .camera-icon:hover {
+  transform: scale(1.15);
+  background: linear-gradient(135deg, var(--al-navy), var(--al-primary));
+  box-shadow: 0 4px 18px rgba(92, 107, 192, 0.45);
+}
+
 /* ── Profile Card ── */
 .alumni-dashboard .profile-card {
   background: var(--al-surface);
@@ -710,12 +733,56 @@
     0 0 0 1px rgba(92, 107, 192, 0.05);
 }
 
+.alumni-dashboard .profile-card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  text-align: left;
+}
+
+.alumni-dashboard .profile-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.alumni-dashboard .profile-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.alumni-dashboard .profile-role-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--al-primary), var(--al-navy), var(--al-primary));
+  background-size: 200% auto;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--al-font-tech);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 7px 16px;
+  border-radius: 20px;
+  margin: 0;
+  box-shadow: 0 3px 12px rgba(92, 107, 192, 0.25);
+}
+
+.alumni-dashboard .profile-card-divider {
+  height: 3px;
+  background: linear-gradient(90deg, var(--al-red), var(--al-primary), var(--al-navy));
+  border-radius: 10px;
+  margin: 20px 0;
+  max-width: 80px;
+}
+
 .alumni-dashboard .profile-name {
   font-family: var(--al-font-display);
   font-size: 26px;
   font-weight: 700;
   color: var(--al-text);
-  margin: 16px 0 12px;
+  margin: 0 0 10px;
 }
 
 /* ── Info Pills ── */
@@ -1081,32 +1148,172 @@
 }
 
 @media (max-width: 768px) {
+  .alumni-dashboard .cadet-topbar {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  .alumni-dashboard .cadet-sidebar-toggle {
+    min-height: 38px;
+    padding: 0 14px;
+    border-radius: 10px;
+    font-size: 12.5px;
+  }
+  .alumni-dashboard .topbar-logout {
+    min-height: 38px;
+    padding: 0 12px;
+    border-radius: 10px;
+    font-size: 12.5px;
+  }
+  .alumni-dashboard .topbar-logout svg {
+    width: 14px;
+    height: 14px;
+  }
   .alumni-dashboard .profile-page {
-    padding: 0 18px 28px;
+    padding: 0 14px 22px;
   }
   .alumni-dashboard .welcome-card {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
-    padding: 20px 22px;
+    gap: 8px;
+    padding: 16px;
+    margin: 14px 0 12px;
+    border-radius: 14px;
   }
   .alumni-dashboard .welcome-text h1 {
-    font-size: 20px;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+  .alumni-dashboard .welcome-text p {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .alumni-dashboard .welcome-motto {
+    font-size: 11px;
+    letter-spacing: 0.08em;
   }
   .alumni-dashboard .stat-cards {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .alumni-dashboard .stat-card {
+    padding: 14px 12px;
+    gap: 10px;
+    border-radius: 12px;
+  }
+  .alumni-dashboard .stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+  .alumni-dashboard .stat-info h3 {
+    font-size: 14px;
+  }
+  .alumni-dashboard .stat-info p {
+    font-size: 11px;
   }
   .alumni-dashboard .banner {
-    height: 150px;
+    height: 130px;
     border-radius: 14px 14px 0 0;
   }
+  .alumni-dashboard .banner-watermark {
+    right: 12px;
+    font-size: 14px;
+    letter-spacing: 0.09em;
+  }
   .alumni-dashboard .profile-card {
-    padding: 0 22px 22px;
+    padding: 0 14px 16px;
     border-radius: 0 0 14px 14px;
   }
+  .alumni-dashboard .profile-card-header {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .alumni-dashboard .profile-photo-wrapper {
+    margin-top: -42px;
+  }
+  .alumni-dashboard .profile-photo-ring {
+    width: 90px;
+    height: 90px;
+    border-width: 4px;
+  }
+  .alumni-dashboard .camera-icon {
+    bottom: 4px;
+    right: 4px;
+    padding: 5px;
+    border-width: 2px;
+  }
+  .alumni-dashboard .camera-icon svg {
+    width: 13px;
+    height: 13px;
+  }
+  .alumni-dashboard .profile-header-text {
+    padding-bottom: 2px;
+  }
   .alumni-dashboard .profile-name {
-    font-size: 22px;
+    font-size: 17px;
+    margin: 0 0 6px;
+  }
+  .alumni-dashboard .profile-meta {
+    gap: 6px;
+  }
+  .alumni-dashboard .profile-role-badge {
+    font-size: 9.5px;
+    padding: 4px 10px;
+    letter-spacing: 0.08em;
+  }
+  .alumni-dashboard .info-pill {
+    gap: 6px;
+    padding: 5px 10px;
+    font-size: 11px;
+    max-width: 100%;
+  }
+  .alumni-dashboard .profile-card-divider {
+    height: 2px;
+    margin: 14px 0;
+    max-width: 72px;
+  }
+  .alumni-dashboard .bio-container {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+  .alumni-dashboard .bio-display {
+    align-items: center;
+    gap: 8px;
+  }
+  .alumni-dashboard .bio {
+    font-size: 13px;
+    line-height: 1.55;
+    padding-left: 10px;
+    border-left-width: 2px;
+  }
+  .alumni-dashboard .bio-edit-icon {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 9px;
+  }
+  .alumni-dashboard .bio-edit-actions {
+    width: 100%;
+    gap: 8px;
+  }
+  .alumni-dashboard .bio-save-btn,
+  .alumni-dashboard .bio-cancel-btn {
+    flex: 1;
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
+  .alumni-dashboard .section-title {
+    margin-top: 22px;
+    font-size: 17px;
+    padding-bottom: 8px;
+  }
+  .alumni-dashboard .section-title::after {
+    height: 2px;
   }
 }
 
@@ -1122,7 +1329,41 @@
     grid-template-columns: 1fr;
   }
   .alumni-dashboard .banner {
-    height: 130px;
+    height: 118px;
+  }
+  .alumni-dashboard .banner-watermark {
+    right: 10px;
+    font-size: 12px;
+    letter-spacing: 0.07em;
+  }
+  .alumni-dashboard .profile-page {
+    padding: 0 10px 18px;
+  }
+  .alumni-dashboard .profile-card {
+    padding: 0 12px 14px;
+  }
+  .alumni-dashboard .profile-card-header {
+    gap: 10px;
+  }
+  .alumni-dashboard .profile-photo-ring {
+    width: 84px;
+    height: 84px;
+  }
+  .alumni-dashboard .profile-name {
+    font-size: 16px;
+  }
+  .alumni-dashboard .info-pill {
+    font-size: 10.5px;
+    padding: 4px 8px;
+  }
+  .alumni-dashboard .welcome-card {
+    padding: 14px;
+  }
+  .alumni-dashboard .welcome-text h1 {
+    font-size: 17px;
+  }
+  .alumni-dashboard .section-title {
+    font-size: 16px;
   }
 }
 

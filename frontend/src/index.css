@@ -49,11 +49,12 @@
 
 /* ── RESET ─────────────────────────────────────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{font-size:16px;scroll-behavior:smooth;height:100%}
+html{font-size:16px;scroll-behavior:smooth;height:100%;overflow-x:hidden}
 body{
   font-family:var(--font-body);background:var(--bg-base);color:var(--text-main);
   line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;
 }
+#root{width:100%;overflow-x:hidden}
 ::selection{background:var(--accent-btn);color:#fff}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:#eef0f7}
@@ -167,6 +168,8 @@ body{
 .brand-subtitle{font-family:var(--font-tech);font-size:.58rem;font-weight:600;letter-spacing:.18em;color:var(--accent-secondary);text-transform:uppercase}
 
 .nav-links{display:flex;align-items:center;gap:32px}
+.mobile-nav{display:none}
+.nav-mobile-toggle{display:none}
 .nav-btn{
   background:transparent;border:none;color:var(--text-muted);font-family:var(--font-body);
   font-size:.86rem;font-weight:500;cursor:pointer;position:relative;padding:8px 0;transition:color var(--speed-fast);
@@ -208,13 +211,39 @@ body{
 /* =======================================================================
    LAYOUT
    ======================================================================= */
-.home-container{position:relative;display:flex;flex-direction:column;min-height:100vh}
-.sections-wrapper{position:relative;z-index:1;flex:1}
+.home-container{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  width:100%;
+  max-width:100%;
+  overflow-x:clip;
+}
+.sections-wrapper{
+  position:relative;
+  z-index:1;
+  flex:1;
+  width:100%;
+  max-width:100%;
+  overflow-x:clip;
+}
 
 /* =======================================================================
    HERO
    ======================================================================= */
-.hero-page{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:0}
+.hero-page{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  overflow:hidden;
+  overflow-x:clip;
+  width:100%;
+  max-width:100%;
+  padding:0;
+}
 .hero-left-fade{
   position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(
@@ -594,8 +623,16 @@ body{
 .modal p{color:var(--text-muted);line-height:1.7;font-size:.92rem}
 
 /* ── LOGIN CARDS ───────────────────────────────────────────────────── */
-.login-card,.ano-card{
-  width:100vw;max-width:440px;
+.login-card{
+  width:min(100%,780px);
+  background:rgba(255,255,255,.92);backdrop-filter:blur(24px);
+  border-radius:22px;margin:24px 0;padding:52px 44px;position:relative;
+  border:1px solid rgba(0,0,0,0.06);
+  box-shadow:0 25px 60px rgba(0,0,0,.06),0 4px 20px rgba(105,111,199,.04);
+  display:flex;flex-direction:column;
+}
+.ano-card{
+  width:min(100%,440px);
   background:rgba(255,255,255,.92);backdrop-filter:blur(24px);
   border-radius:20px;margin:24px 0;padding:42px 34px;position:relative;
   border:1px solid rgba(0,0,0,0.06);
@@ -703,26 +740,237 @@ body{
   .flip-card{height:260px}
   .structure-grid{grid-template-columns:repeat(2,1fr)}
 }
-@media(max-width:768px){
-  .nav{padding:0 20px;height:62px}
+@media(max-width:900px){
+  .nav{
+    padding:0 12px;
+    height:58px;
+    justify-content:space-between;
+  }
+  .brand-mark{width:40px;height:40px}
   .brand-text{display:none}
-  .nav-links{gap:12px}
-  .nav-btn{font-size:.8rem}
-  .hero-content h1{font-size:2.8rem}
+  .nav-links{display:none}
+  .mobile-nav{
+    display:flex;
+    align-items:center;
+    margin-left:auto;
+    position:relative;
+    z-index:5;
+  }
+  .nav-mobile-toggle{
+    display:inline-flex;
+    width:36px;
+    height:36px;
+    border-radius:10px;
+    border:1px solid rgba(0,0,0,.08);
+    background:rgba(255,255,255,.9);
+    color:var(--text-main);
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+  }
+}
+@media(max-width:768px){
+  .nav{padding:0 12px;height:58px;justify-content:space-between}
+  .brand-mark{width:40px;height:40px}
+  .brand-text{display:none}
+  .nav-links{display:none}
+  .mobile-nav{
+    display:flex;
+    align-items:center;
+    margin-left:auto;
+    position:relative;
+    z-index:5;
+  }
+  .nav-mobile-toggle{
+    display:inline-flex;
+    width:36px;
+    height:36px;
+    border-radius:10px;
+    border:1px solid rgba(0,0,0,.08);
+    background:rgba(255,255,255,.9);
+    color:var(--text-main);
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+  }
+  .mobile-nav-menu{
+    position:absolute;
+    top:calc(100% + 8px);
+    right:0;
+    width:min(230px,calc(100vw - 24px));
+    background:rgba(255,255,255,.98);
+    border:1px solid rgba(0,0,0,.08);
+    border-radius:12px;
+    box-shadow:0 16px 36px rgba(0,0,0,.12);
+    padding:6px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .mobile-nav-btn{
+    border:none;
+    background:transparent;
+    color:var(--text-main);
+    font-family:var(--font-body);
+    font-size:.82rem;
+    font-weight:600;
+    text-align:left;
+    padding:10px 12px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .mobile-nav-btn:hover{
+    background:rgba(105,111,199,.08);
+    color:var(--accent-primary);
+  }
+  .mobile-login-btn{
+    border:1px solid rgba(0,0,0,.08);
+    background:rgba(255,255,255,.9);
+  }
+  .hero-page{min-height:auto}
+  .hero-main{gap:22px;padding:calc(var(--nav-height) + 20px) 16px 8px}
+  .hero-visual{margin:0 auto 8px;width:260px}
+  .hero-content h1{font-size:2.3rem;line-height:1.08;margin-bottom:10px}
+  .hero-pill{margin-bottom:14px;padding:7px 14px;font-size:.65rem;letter-spacing:.09em}
+  .hero-tagline{font-size:.78rem;letter-spacing:.12em;margin-bottom:10px}
+  .hero-body{font-size:.9rem;line-height:1.55;margin-bottom:18px;max-width:100%}
+  .hero-actions{width:100%;gap:8px;justify-content:center}
+  .hero-actions button{
+    width:min(100%,190px);
+    height:38px;
+    padding:0 12px;
+    font-size:.78rem;
+    border-radius:10px;
+  }
+  .hero-stats{padding:10px 16px 8px}
+  .stats-grid{display:grid;grid-template-columns:1fr;gap:10px}
+  .stat-card{padding:10px 12px;gap:10px;border-radius:12px}
+  .stat-number{font-size:1.08rem}
+  .stat-label{font-size:.68rem}
+  .scroll-indicator{padding:10px 0 14px}
+  .scroll-indicator span{font-size:.72rem}
+  .motto-banner{margin:8px auto 0;padding:14px 12px}
+  .motto-banner h2{font-size:1.12rem}
+  .motto-banner p{font-size:.82rem}
   .about-grid{grid-template-columns:1fr 1fr}
   .flip-card{height:250px}
   .structure-grid{grid-template-columns:1fr}
-  .login-card,.ano-card{padding:28px 20px}
+  .modal-overlay,.modal-backdrop{padding:14px}
+  .modal-content{width:min(100%,420px)}
+  .login-page,.ano-login-page,.ano-login-card{padding:8px 0}
+  .login-card,.ano-card{
+    width:min(100%,380px);
+    border-radius:16px;
+    margin:6px 0;
+    padding:24px 16px 18px;
+  }
+  .login-card{
+    width:min(100%,360px);
+  }
+  .card-close-btn{top:10px;right:10px;width:28px;height:28px}
+  .login-logo{width:56px;margin:0 auto 10px}
+  .login-title,.ano-header h1{font-size:1.18rem}
+  .ano-header p{font-size:.76rem;margin-bottom:12px}
+  .role-select{margin-bottom:16px}
+  .role-select button{padding:8px 0;font-size:.7rem}
+  .input-wrapper{margin-bottom:12px}
+  .input-wrapper label{font-size:.74rem}
+  .login-card input,.ano-card input{height:44px;font-size:.84rem;border-radius:9px}
+  .input-group.has-icon input{padding-left:40px}
+  .password-box input{padding-right:40px}
+  .input-icon{left:12px;font-size:.9rem}
+  .password-eye{right:12px}
+  .login-btn,.authorize-btn{
+    height:44px;
+    border-radius:10px;
+    font-size:.78rem;
+    letter-spacing:.06em;
+  }
+  .restricted-box{font-size:.68rem;padding:8px;margin-bottom:14px}
+  .ano-icon img{width:62px}
+  .ano-footer-text{margin-top:12px;font-size:.65rem}
+
+  /* ANO modal card: keep centered and prevent side overflow */
+  .modal-overlay.ano-login-modal{
+    padding:10px !important;
+    align-items:flex-start;
+  }
+  .modal-overlay.ano-login-modal .modal-content.ano-login-content{
+    width:100%;
+    display:flex;
+    justify-content:center;
+  }
+  .modal-overlay.ano-login-modal .ano-login-card{
+    width:100%;
+    padding:0 !important;
+  }
+  .modal-overlay.ano-login-modal .ano-card{
+    width:min(100%,360px) !important;
+    max-width:100%;
+    margin:0 auto !important;
+    padding:22px 14px 16px !important;
+    border-radius:14px !important;
+    box-sizing:border-box;
+    max-height:calc(100vh - 20px) !important;
+    overflow-y:auto !important;
+  }
 }
 @media(max-width:480px){
-  .nav-login{padding:8px 16px;font-size:.76rem}
-  .hero-content h1{font-size:2.2rem}
-  .hero-visual{width:240px}
+  .nav{padding:0 10px;height:56px}
+  .brand-mark{width:36px;height:36px}
+  .nav-mobile-toggle{width:34px;height:34px}
+  .mobile-nav-menu{
+    width:min(215px,calc(100vw - 20px));
+    padding:5px;
+  }
+  .mobile-nav-btn{
+    font-size:.78rem;
+    padding:9px 10px;
+  }
+  .hero-main{padding:calc(var(--nav-height) + 10px) 12px 6px}
+  .hero-content h1{font-size:1.95rem}
+  .hero-visual{width:200px;margin:0 auto 6px}
+  .hero-pill{font-size:.6rem;padding:6px 12px}
+  .hero-tagline{font-size:.7rem}
+  .hero-body{font-size:.84rem}
+  .hero-actions button{
+    width:min(100%,170px);
+    height:36px;
+    font-size:.74rem;
+  }
+  .hero-stats{padding:8px 12px 6px}
+  .stat-card{padding:9px 10px}
+  .stat-icon{width:30px;height:30px;font-size:.95rem}
+  .stat-number{font-size:.98rem}
+  .scroll-indicator{padding:8px 0 10px}
+  .motto-banner{padding:12px 10px;border-radius:12px}
+  .motto-banner h2{font-size:1rem}
+  .motto-banner p{font-size:.75rem}
   .about-grid{grid-template-columns:1fr}
   .flip-card{height:220px}
   .structure-grid{grid-template-columns:1fr}
-  .modal-content{width:95vw}
+  .modal-overlay,.modal-backdrop{padding:10px}
+  .modal-content{width:100%}
+  .login-card,.ano-card{
+    width:min(100%,350px);
+    padding:20px 12px 14px;
+    border-radius:14px;
+  }
+  .login-card{
+    width:min(100%,320px);
+  }
+  .login-title,.ano-header h1{font-size:1.05rem}
+  .role-select button{font-size:.66rem}
+  .login-card input,.ano-card input{height:40px;font-size:.8rem}
+  .login-btn,.authorize-btn{height:40px;font-size:.72rem}
   .wing-row{flex-wrap:wrap;gap:14px}
+
+  .modal-overlay.ano-login-modal .ano-card{
+    width:min(100%,330px) !important;
+    padding:18px 12px 14px !important;
+  }
 }
 
 /* ── ANO MODAL ─────────────────────────────────────────────────────── */

@@ -33,6 +33,20 @@ const toDisplayDateTime = (value) => {
   }).format(dt);
 };
 
+const getDrillSortValue = (drill = {}) => {
+  const createdAt = new Date(drill.created_at || "").getTime();
+  if (!Number.isNaN(createdAt) && createdAt > 0) return createdAt;
+
+  const drillId = Number(drill.drill_id);
+  if (!Number.isNaN(drillId) && drillId > 0) return drillId;
+
+  const datePart = String(drill.drill_date || "").trim();
+  const timePart = String(drill.drill_time || "00:00:00").trim();
+  const normalizedTime = /^\d{2}:\d{2}$/.test(timePart) ? `${timePart}:00` : timePart;
+  const scheduledAt = new Date(`${datePart}T${normalizedTime}`).getTime();
+  return Number.isNaN(scheduledAt) ? 0 : scheduledAt;
+};
+
 const SuoAttendance = () => {
   const [activeView, setActiveView] = useState("attendance");
   const [sessionOptions, setSessionOptions] = useState([]);
@@ -243,6 +257,13 @@ const SuoAttendance = () => {
   };
 
   const drills = sessionDetail?.drills || [];
+  const sortedDrills = useMemo(
+    () =>
+      drills
+        .map((drill, index) => ({ ...drill, _originalIndex: index }))
+        .sort((a, b) => getDrillSortValue(b) - getDrillSortValue(a)),
+    [drills]
+  );
   const cadets = sessionDetail?.cadets || [];
 
   if (loading && !sessionDetail) {
@@ -338,7 +359,7 @@ const SuoAttendance = () => {
                 <thead>
                   <tr>
                     <th className="col-cadet">Cadet Name</th>
-                    {drills.map((drill, drillIdx) => (
+                    {sortedDrills.map((drill, drillIdx) => (
                       <th key={drill.drill_id} className="col-drill">
                         <div className="drill-head">
                           <span>{drill.drill_name || `Drill ${drillIdx + 1}`}</span>
@@ -365,8 +386,8 @@ const SuoAttendance = () => {
                     return (
                       <tr key={cadet.regimental_no}>
                         <td className="cadet-name-cell">{cadet.name}</td>
-                        {drills.map((drill, drillIdx) => {
-                          const status = cadet.attendance?.[drillIdx] ?? null;
+                        {sortedDrills.map((drill, drillIdx) => {
+                          const status = cadet.attendance?.[drill._originalIndex] ?? null;
                           return (
                             <td key={`${cadet.regimental_no}-${drill.drill_id}`}>
                               {status ? (

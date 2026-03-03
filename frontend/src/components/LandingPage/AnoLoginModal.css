@@ -23,3 +23,37 @@
   padding: 44px 36px;
   overflow: hidden;
 }
+
+@media (max-width: 768px) {
+  .ano-login-modal {
+    padding: 14px;
+    align-items: flex-start;
+  }
+
+  .ano-login-modal .ano-login-card {
+    padding: 8px 0;
+    width: 100%;
+  }
+
+  .ano-login-modal .ano-card {
+    width: min(100%, 380px);
+    margin: 4px 0;
+    padding: 24px 16px 18px;
+    border-radius: 16px;
+    max-height: calc(100vh - 28px);
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .ano-login-modal {
+    padding: 10px;
+  }
+
+  .ano-login-modal .ano-card {
+    width: min(100%, 350px);
+    padding: 20px 12px 14px;
+    border-radius: 14px;
+    max-height: calc(100vh - 20px);
+  }
+}
