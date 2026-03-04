@@ -12,6 +12,12 @@ import {
   AlertCircle,
   Paperclip,
   Plus,
+  BarChart3,
+  UserCheck,
+  UserX,
+  TrendingUp,
+  Loader2,
+  Info,
 } from "lucide-react";
 import "./cadetAttendene.css";
 import { attendanceApi } from "../../api/attendanceApi";
@@ -212,25 +218,55 @@ export default function CadetAttendance() {
         </div>
       </div>
 
-      {loading ? <p>Loading...</p> : null}
-      {error ? <p style={{ color: "crimson" }}>{error}</p> : null}
+      {loading && (
+        <div className="ca-loading">
+          <Loader2 size={28} className="ca-spinner" />
+          <span>Loading attendance data...</span>
+        </div>
+      )}
+      {error && (
+        <div className="ca-error-card">
+          <Info size={18} />
+          <span>{error}</span>
+        </div>
+      )}
 
-      <div className="ca-stats-grid ca-stats-grid--modern">
-        <div className="ca-stat-card ca-stat-card--metric ca-stat-total">
-          <span className="ca-stat-number">{stats.total}</span>
-          <span className="ca-stat-label">Total Drills</span>
+      <div className="ca-stats-grid">
+        <div className="ca-stat-card ca-stat-total">
+          <div className="ca-stat-icon ca-stat-icon--blue">
+            <BarChart3 size={22} />
+          </div>
+          <div className="ca-stat-info">
+            <span className="ca-stat-number">{stats.total}</span>
+            <span className="ca-stat-label">Total Drills</span>
+          </div>
         </div>
-        <div className="ca-stat-card ca-stat-card--metric ca-stat-present">
-          <span className="ca-stat-number">{stats.present}</span>
-          <span className="ca-stat-label">Present</span>
+        <div className="ca-stat-card ca-stat-present">
+          <div className="ca-stat-icon ca-stat-icon--green">
+            <UserCheck size={22} />
+          </div>
+          <div className="ca-stat-info">
+            <span className="ca-stat-number">{stats.present}</span>
+            <span className="ca-stat-label">Present</span>
+          </div>
         </div>
-        <div className="ca-stat-card ca-stat-card--metric ca-stat-absent">
-          <span className="ca-stat-number">{stats.absent}</span>
-          <span className="ca-stat-label">Absent</span>
+        <div className="ca-stat-card ca-stat-absent">
+          <div className="ca-stat-icon ca-stat-icon--red">
+            <UserX size={22} />
+          </div>
+          <div className="ca-stat-info">
+            <span className="ca-stat-number">{stats.absent}</span>
+            <span className="ca-stat-label">Absent</span>
+          </div>
         </div>
-        <div className="ca-stat-card ca-stat-card--metric ca-stat-percent">
-          <span className="ca-stat-number">{attendancePercent}%</span>
-          <span className="ca-stat-label">Attendance</span>
+        <div className="ca-stat-card ca-stat-percent">
+          <div className="ca-stat-icon ca-stat-icon--indigo">
+            <TrendingUp size={22} />
+          </div>
+          <div className="ca-stat-info">
+            <span className="ca-stat-number">{attendancePercent}%</span>
+            <span className="ca-stat-label">Attendance</span>
+          </div>
         </div>
       </div>
 
