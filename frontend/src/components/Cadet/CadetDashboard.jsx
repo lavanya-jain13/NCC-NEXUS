@@ -19,6 +19,7 @@ import {
   Video,
   ClipboardCheck,
   Bell,
+  Gauge,
 } from "lucide-react";
 import ChatLayout from "../ChatCommon/ChatLayout";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +41,7 @@ import QuizModule from "../quiz/QuizModule";
 import VoiceCommandsModule from "../VoiceCommands/VoiceCommandsModule";
 import CommunityFeed from "../community/CommunityFeed";
 import CertificateModule from "../Certificate/CertificateModule";
+import CadetTwin from "../Command/CadetTwin";
 import NotificationPanel from "../Notifications/NotificationPanel";
 import { connectNotificationSocket, getNotificationSocket } from "../../features/notifications/notificationSocket";
 import { clearAuthStorage, hasAuthFor } from "../../utils/authState";
@@ -60,7 +62,7 @@ const normalizeRankLabel = (value, fallback) => {
 
 export default function CadetDashboard() {
   const CADET_TAB_STORAGE_KEY = "cadet_dashboard_active_tab";
-  const CADET_ALLOWED_TABS = ["profile", "feed", "attendance", "meetings", "quiz", "voice", "chatbot", "chat", "community", "certificates"];
+  const CADET_ALLOWED_TABS = ["profile", "feed", "attendance", "twin", "meetings", "quiz", "voice", "chatbot", "chat", "community", "certificates"];
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -410,6 +412,17 @@ const [isEditingBio, setIsEditingBio] = useState(false);
               </button>
 
               <button
+                className={`nav-item ${activeTab === "twin" ? "active" : ""}`}
+                onClick={() => {
+                  setActiveTab("twin");
+                  setSidebarOpen(false);
+                }}
+              >
+                <Gauge size={18} />
+                <span>Digital Twin</span>
+              </button>
+
+              <button
                 className={`nav-item ${activeTab === "meetings" ? "active" : ""}`}
                 onClick={() => {
                   setMeetingView("list");
@@ -620,6 +633,12 @@ const [isEditingBio, setIsEditingBio] = useState(false);
           {activeTab === "community" && <CommunityFeed />}
 
           {activeTab === "attendance" && <CadetAttendance />}
+
+          {activeTab === "twin" && (
+            <div className="twin-tab-shell">
+              <CadetTwin embedded />
+            </div>
+          )}
           {activeTab === "quiz" && (
             <QuizModule
               participantName={profileData.name || "Cadet"}

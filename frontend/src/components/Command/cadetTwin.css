@@ -1,0 +1,485 @@
+/*
+ * Responsibility: Styling for the Cadet Digital Twin screen.
+ * Layer: Command Center UI (Layer 4).
+ * Depends on: the app design tokens defined in dashboard.css (:root --d-*),
+ *   with hard fallbacks so the screen also renders standalone at /twin.
+ * Must never be depended on by: other components (scoped under .twin-module).
+ */
+
+/* Token resolution order: cadet dashboard (--d-*) -> SUO dashboard (--s-*) ->
+   ANO dashboard (--a-*) -> hard fallback. Native to whichever shell hosts it. */
+.twin-module {
+  --tw-bg: var(--d-bg, var(--s-bg, var(--a-bg, #f0f2f8)));
+  --tw-surface: var(--d-surface, var(--s-surface, var(--a-surface, #ffffff)));
+  --tw-text: var(--d-text, var(--s-text, var(--a-text, #1a1d2e)));
+  --tw-text-2: var(--d-text-secondary, var(--s-text-secondary, var(--a-text-secondary, #3d4260)));
+  --tw-muted: var(--d-text-muted, var(--s-text-muted, var(--a-text-muted, #8b90a8)));
+  --tw-primary: var(--d-primary, var(--s-primary, var(--a-primary, #5c6bc0)));
+  --tw-primary-light: var(--d-primary-light, var(--s-primary-light, var(--a-primary-light, #7986cb)));
+  --tw-navy: var(--d-navy, var(--s-navy, var(--a-navy, #1a237e)));
+  --tw-red: var(--d-red, var(--s-red, var(--a-red, #e53935)));
+  --tw-border: var(--d-border, var(--s-border, var(--a-border, rgba(0, 0, 0, 0.06))));
+  --tw-font: var(--d-font, var(--s-font, var(--a-font, "Poppins", sans-serif)));
+  --tw-font-display: var(--d-font-display, var(--s-font-display, var(--a-font-display, "Marcellus", serif)));
+  --tw-font-tech: var(--d-font-tech, var(--s-font-tech, var(--a-font-tech, "Manrope", sans-serif)));
+
+  font-family: var(--tw-font);
+  color: var(--tw-text);
+  padding: 4px 0 40px;
+}
+
+.twin-module.twin-standalone {
+  background: var(--tw-bg);
+  min-height: 100vh;
+  padding: 28px 24px 48px;
+}
+
+/* ── HERO ─────────────────────────────────────────────── */
+.twin-hero {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: var(--tw-surface);
+  border: 1px solid var(--tw-border);
+  border-radius: 16px;
+  padding: 26px 32px;
+  margin: 8px 0 18px;
+  box-shadow: 0 2px 12px rgba(92, 107, 192, 0.05);
+  animation: twinFadeUp 0.5s ease both;
+}
+
+.twin-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--tw-red) 0%, var(--tw-red) 33%,
+    var(--tw-primary) 33%, var(--tw-primary) 66%,
+    var(--tw-navy) 66%, var(--tw-navy) 100%
+  );
+}
+
+.twin-hero-title {
+  font-family: var(--tw-font-display);
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.2px;
+}
+
+.twin-hero-sub {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--tw-muted);
+}
+
+.twin-regno {
+  font-family: var(--tw-font-tech);
+  font-weight: 700;
+  color: var(--tw-primary);
+  letter-spacing: 0.4px;
+}
+
+.twin-hero-actions { display: flex; align-items: center; gap: 10px; }
+
+/* ── BUTTONS ──────────────────────────────────────────── */
+.twin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--tw-primary), var(--tw-navy));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 11px 20px;
+  font-family: var(--tw-font);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(92, 107, 192, 0.25);
+}
+.twin-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(92, 107, 192, 0.34);
+}
+.twin-btn:disabled { opacity: 0.62; cursor: default; box-shadow: none; }
+
+.twin-btn-ghost {
+  background: transparent;
+  color: var(--tw-primary);
+  border: 1px solid rgba(92, 107, 192, 0.28);
+  box-shadow: none;
+}
+.twin-btn-ghost:hover:not(:disabled) {
+  background: rgba(92, 107, 192, 0.07);
+  box-shadow: none;
+}
+
+/* ── STAT STRIP ───────────────────────────────────────── */
+.twin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.twin-stat {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--tw-surface);
+  border: 1px solid var(--tw-border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(92, 107, 192, 0.04);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: twinFadeUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.twin-stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(92, 107, 192, 0.12);
+}
+.twin-stat:nth-child(2) { animation-delay: 0.06s; }
+.twin-stat:nth-child(3) { animation-delay: 0.12s; }
+.twin-stat:nth-child(4) { animation-delay: 0.18s; }
+
+.twin-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+  animation: twinPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.twin-ic-indigo { background: linear-gradient(135deg, #7986cb, #5c6bc0); }
+.twin-ic-navy   { background: linear-gradient(135deg, #5c6bc0, #1a237e); }
+.twin-ic-red    { background: linear-gradient(135deg, #ef5350, #e53935); }
+.twin-ic-teal   { background: linear-gradient(135deg, #4db6ac, #00897b); }
+
+.twin-stat-info h3 {
+  margin: 0;
+  font-family: var(--tw-font-tech);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+.twin-stat-info p {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--tw-muted);
+}
+
+/* ── SECTION TITLE ────────────────────────────────────── */
+.twin-section-title {
+  font-family: var(--tw-font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--tw-text);
+  margin: 26px 0 14px;
+  padding-bottom: 10px;
+  width: fit-content;
+  position: relative;
+}
+.twin-section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--tw-primary), transparent);
+}
+
+/* ── READINESS CARD ───────────────────────────────────── */
+.twin-readiness {
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  background: var(--tw-surface);
+  border: 1px solid var(--tw-border);
+  border-radius: 16px;
+  padding: 30px 32px;
+  box-shadow: 0 2px 12px rgba(92, 107, 192, 0.05);
+  animation: twinFadeUp 0.5s ease 0.1s both;
+}
+
+.twin-ring-wrap { position: relative; flex-shrink: 0; }
+.twin-ring-track { fill: none; stroke: #e8ecff; stroke-width: 13; }
+.twin-ring-value {
+  fill: none;
+  stroke-width: 13;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.twin-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.twin-ring-num {
+  font-family: var(--tw-font-tech);
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--tw-text);
+}
+.twin-ring-lbl {
+  font-size: 11px;
+  letter-spacing: 1.4px;
+  color: var(--tw-muted);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.twin-readiness-body { flex: 1; min-width: 0; }
+.twin-readiness-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.twin-readiness-head h3 {
+  font-family: var(--tw-font-display);
+  font-size: 19px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.twin-explain {
+  color: var(--tw-text-2);
+  font-size: 13.5px;
+  line-height: 1.65;
+  margin: 10px 0 0;
+}
+
+/* ── TREND BADGE ──────────────────────────────────────── */
+.twin-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+.twin-trend-improving { background: rgba(0, 137, 123, 0.12); color: #00695c; }
+.twin-trend-declining { background: rgba(229, 57, 53, 0.12); color: #c62828; }
+.twin-trend-stable { background: rgba(92, 107, 192, 0.12); color: var(--tw-navy); }
+.twin-trend-insufficient_data { background: rgba(139, 144, 168, 0.14); color: #6b7089; }
+
+/* ── CONFIDENCE METER ─────────────────────────────────── */
+.twin-meter { margin-top: 16px; max-width: 460px; }
+.twin-meter-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tw-text-2);
+  margin-bottom: 6px;
+}
+.twin-meter-head span:last-child {
+  font-family: var(--tw-font-tech);
+  color: var(--tw-primary);
+  font-weight: 800;
+}
+.twin-meter-track {
+  height: 9px;
+  background: #e8ecff;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.twin-meter-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--tw-primary-light), var(--tw-navy));
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.twin-meter-note { font-size: 11.5px; color: var(--tw-muted); margin-top: 6px; }
+
+/* ── PILLAR CARD ──────────────────────────────────────── */
+.twin-pillar {
+  background: var(--tw-surface);
+  border: 1px solid var(--tw-border);
+  border-radius: 16px;
+  padding: 24px 26px;
+  box-shadow: 0 2px 10px rgba(92, 107, 192, 0.04);
+  animation: twinFadeUp 0.5s ease 0.16s both;
+}
+.twin-pillar-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.twin-pillar-ic {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--tw-primary), var(--tw-navy));
+  flex-shrink: 0;
+}
+.twin-pillar-name {
+  font-family: var(--tw-font-display);
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+}
+.twin-pillar-sub { font-size: 12px; color: var(--tw-muted); margin: 2px 0 0; }
+.twin-pillar-score {
+  margin-left: auto;
+  font-family: var(--tw-font-tech);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+}
+.twin-pillar-score small { font-size: 14px; color: var(--tw-muted); font-weight: 600; }
+
+/* evidence chips */
+.twin-evidence {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+.twin-ev {
+  background: linear-gradient(145deg, #f7f8fd, #eef1fb);
+  border: 1px solid rgba(92, 107, 192, 0.1);
+  border-radius: 12px;
+  padding: 12px 14px;
+  transition: all 0.3s ease;
+}
+.twin-ev:hover { transform: translateY(-2px); border-color: rgba(92, 107, 192, 0.26); }
+.twin-ev span {
+  display: block;
+  font-size: 11px;
+  color: var(--tw-muted);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.twin-ev strong {
+  display: block;
+  font-family: var(--tw-font-tech);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--tw-text);
+  margin-top: 3px;
+}
+
+/* colour bands */
+.twin-good { color: #00695c; }
+.twin-warn { color: #ef6c00; }
+.twin-bad { color: #c62828; }
+.twin-none { color: var(--tw-muted); }
+
+/* ── STATES ───────────────────────────────────────────── */
+.twin-state {
+  background: var(--tw-surface);
+  border: 1px solid var(--tw-border);
+  border-radius: 16px;
+  padding: 46px 28px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(92, 107, 192, 0.04);
+  animation: twinFadeUp 0.45s ease both;
+}
+.twin-state-ic {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--tw-primary), var(--tw-navy));
+}
+.twin-state h4 {
+  font-family: var(--tw-font-display);
+  font-size: 18px;
+  margin: 0 0 6px;
+}
+.twin-state p { color: var(--tw-muted); font-size: 13.5px; margin: 0 0 18px; }
+.twin-state-error .twin-state-ic { background: linear-gradient(135deg, #ef5350, #c62828); }
+
+.twin-skeleton {
+  height: 118px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #eef0f7 25%, #f7f8fc 50%, #eef0f7 75%);
+  background-size: 200% 100%;
+  animation: twinShimmer 1.4s infinite;
+  margin-bottom: 16px;
+}
+
+/* ── DASHBOARD TAB SHELL (matches .meeting-tab-shell spacing) ── */
+.cadet-dashboard .twin-tab-shell,
+.suo-dashboard .twin-tab-shell {
+  padding: 0 32px 32px;
+}
+
+/* spinning refresh icon while recomputing */
+.twin-spin {
+  animation: twinSpin 0.9s linear infinite;
+}
+
+/* ── ANIMATIONS ───────────────────────────────────────── */
+@keyframes twinSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes twinFadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes twinPopIn {
+  0% { opacity: 0; transform: scale(0.5); }
+  60% { transform: scale(1.14); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes twinShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .twin-stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+  .twin-hero { flex-direction: column; align-items: flex-start; padding: 22px; }
+  .twin-readiness { flex-direction: column; text-align: center; gap: 22px; padding: 26px 20px; }
+  .twin-readiness-head { justify-content: center; }
+  .twin-meter { margin-left: auto; margin-right: auto; }
+  .twin-pillar-score { margin-left: 0; }
+  .twin-pillar-head { flex-wrap: wrap; }
+}
+@media (max-width: 480px) {
+  .twin-stats { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .cadet-dashboard .twin-tab-shell,
+  .suo-dashboard .twin-tab-shell {
+    padding: 0 18px 20px;
+  }
+}

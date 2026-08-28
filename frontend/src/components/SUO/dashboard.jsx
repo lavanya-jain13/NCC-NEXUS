@@ -18,6 +18,7 @@ import {
   ClipboardCheck,
   Mic,
   Bell,
+  Gauge,
 } from "lucide-react";
 import ChatLayout from "../ChatCommon/ChatLayout";
 import { useNavigate } from "react-router-dom";
@@ -42,6 +43,7 @@ import QuizModule from "../quiz/QuizModule";
 import VoiceCommandsModule from "../VoiceCommands/VoiceCommandsModule";
 import CommunityFeed from "../community/CommunityFeed";
 import CertificateModule from "../Certificate/CertificateModule";
+import CadetTwin from "../Command/CadetTwin";
 import NotificationPanel from "../Notifications/NotificationPanel";
 import { connectNotificationSocket, getNotificationSocket } from "../../features/notifications/notificationSocket";
 import { clearAuthStorage, hasAuthFor } from "../../utils/authState";
@@ -62,7 +64,7 @@ const normalizeRankLabel = (value, fallback) => {
 
 export default function SUODashboard() {
   const SUO_TAB_STORAGE_KEY = "suo_dashboard_active_tab";
-  const SUO_ALLOWED_TABS = ["profile", "feed", "chatbot", "attendance", "meetings", "quiz", "voice", "chat", "community", "certificates"];
+  const SUO_ALLOWED_TABS = ["profile", "feed", "chatbot", "attendance", "twin", "meetings", "quiz", "voice", "chat", "community", "certificates"];
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -410,6 +412,17 @@ export default function SUODashboard() {
                 </button>
 
                 <button
+                  className={`nav-item ${activeTab === "twin" ? "active" : ""}`}
+                  onClick={() => {
+                    setActiveTab("twin");
+                    dispatch(closeSUOSidebar());
+                  }}
+                >
+                  <Gauge size={18} />
+                  <span>Digital Twin</span>
+                </button>
+
+                <button
                   className={`nav-item ${activeTab === "meetings" ? "active" : ""}`}
                   onClick={() => {
                     setMeetingView("list");
@@ -545,6 +558,12 @@ export default function SUODashboard() {
             )}
 
             {activeTab === "attendance" && <SuoAttendance />}
+
+            {activeTab === "twin" && (
+              <div className="twin-tab-shell">
+                <CadetTwin embedded />
+              </div>
+            )}
 
             {activeTab === "chatbot" && (
               <div className="chatbot-panel">

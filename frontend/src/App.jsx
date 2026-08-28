@@ -40,6 +40,13 @@ import Community from "./pages/Community";
 import CommunityFeed from "./components/community/CommunityFeed";
 import AnoDonationOverview from "./components/Donations/AnoDonationOverview";
 
+// 7. Command / Intelligence Module
+import CadetTwin from "./components/Command/CadetTwin";
+import CommandCenter from "./components/Command/CommandCenter";
+import CommandCadetView from "./components/Command/CommandCadetView";
+import RiskWatchlist from "./components/Command/RiskWatchlist";
+import CampSelectionBoard from "./components/Command/CampSelectionBoard";
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -73,6 +80,10 @@ const App = () => {
         <Route path="/meetings/:meetingId/report" element={<PostMeetingReport />} />
         <Route path="/community" element={<Community />} />
 
+        {/* COMMAND / INTELLIGENCE ROUTES */}
+        <Route path="/twin" element={<CadetTwin />} />
+        <Route path="/twin/:regimentalNo" element={<CadetTwin />} />
+
         <Route
           path="/quiz/attempt/:attemptId"
           element={
@@ -87,6 +98,10 @@ const App = () => {
           <Route index element={<AnoDashboardHome />} />
           <Route path="add-cadet" element={<AddCadet />} />
           <Route path="manage-cadets" element={<ManageCadets />} />
+          <Route path="command" element={<CommandCenter />} />
+          <Route path="command/risk" element={<RiskWatchlist />} />
+          <Route path="command/camp-selection" element={<CampSelectionBoard />} />
+          <Route path="command/cadet/:regimentalNo" element={<CommandCadetView />} />
           <Route path="ano-attendance" element={<AnoAttendance />} />
           <Route path="chat" element={<AnoChat />} />
           <Route path="community" element={<CommunityFeed />} />

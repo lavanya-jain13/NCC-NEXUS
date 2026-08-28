@@ -1,0 +1,215 @@
+/*
+ * Responsibility: Styles for the ANO Command Center (cohort readiness) + the
+ *   in-shell cadet detail wrapper. Hand-rolled, no chart lib (ADL-008).
+ * Layer: Command Center UI (Layer 4).
+ * Depends on: ANO design tokens (--a-*) with hard fallbacks; scoped under .cc-*.
+ * Must never be depended on by: any other component (scoped styles only).
+ */
+
+.cc-page {
+  --cc-surface: var(--a-surface, #ffffff);
+  --cc-text: var(--a-text, #1a1d2e);
+  --cc-text-2: var(--a-text-secondary, #3d4260);
+  --cc-muted: var(--a-text-muted, #8b90a8);
+  --cc-primary: var(--a-primary, #5c6bc0);
+  --cc-navy: var(--a-navy, #1a237e);
+  --cc-border: var(--a-border, rgba(0, 0, 0, 0.06));
+  --cc-font: var(--a-font, "Poppins", sans-serif);
+  --cc-font-display: var(--a-font-display, "Marcellus", serif);
+  --cc-font-tech: var(--a-font-tech, "Manrope", sans-serif);
+
+  font-family: var(--cc-font);
+  color: var(--cc-text);
+  padding: 10px clamp(16px, 3vw, 32px) 44px;
+}
+
+/* ── HERO ── */
+.cc-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--cc-surface);
+  border: 1px solid var(--cc-border);
+  border-radius: 16px;
+  padding: 22px 26px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 12px rgba(92, 107, 192, 0.05);
+  position: relative;
+  overflow: hidden;
+  animation: ccFadeUp 0.45s ease both;
+}
+.cc-hero::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg,
+    var(--a-red, #e53935) 0%, var(--a-red, #e53935) 33%,
+    var(--cc-primary) 33%, var(--cc-primary) 66%,
+    var(--cc-navy) 66%, var(--cc-navy) 100%);
+}
+.cc-title { font-family: var(--cc-font-display); font-size: 23px; font-weight: 700; margin: 0; }
+.cc-sub { margin: 5px 0 0; font-size: 13px; color: var(--cc-muted); }
+
+.cc-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--cc-primary), var(--cc-navy));
+  color: #fff; border: none; border-radius: 12px;
+  padding: 11px 18px; font-family: var(--cc-font);
+  font-size: 13.5px; font-weight: 600; cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(92, 107, 192, 0.25);
+}
+.cc-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(92, 107, 192, 0.34); }
+.cc-btn:disabled { opacity: 0.62; cursor: default; box-shadow: none; }
+.cc-spin { animation: ccSpin 0.9s linear infinite; }
+
+/* ── SUMMARY STATS ── */
+.cc-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px; }
+.cc-stat {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--cc-surface); border: 1px solid var(--cc-border);
+  border-radius: 16px; padding: 18px;
+  box-shadow: 0 2px 10px rgba(92, 107, 192, 0.04);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  animation: ccFadeUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.cc-stat:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(92, 107, 192, 0.12); }
+.cc-stat:nth-child(2) { animation-delay: 0.05s; }
+.cc-stat:nth-child(3) { animation-delay: 0.1s; }
+.cc-stat:nth-child(4) { animation-delay: 0.15s; }
+.cc-stat-ic {
+  width: 46px; height: 46px; border-radius: 13px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; color: #fff;
+}
+.cc-ic-indigo { background: linear-gradient(135deg, #7986cb, #5c6bc0); }
+.cc-ic-navy   { background: linear-gradient(135deg, #5c6bc0, #1a237e); }
+.cc-ic-teal   { background: linear-gradient(135deg, #4db6ac, #00897b); }
+.cc-ic-red    { background: linear-gradient(135deg, #ef5350, #e53935); }
+.cc-stat h3 { margin: 0; font-family: var(--cc-font-tech); font-size: 20px; font-weight: 800; }
+.cc-stat p { margin: 2px 0 0; font-size: 12px; color: var(--cc-muted); }
+
+/* ── DISTRIBUTION ── */
+.cc-dist {
+  background: var(--cc-surface); border: 1px solid var(--cc-border);
+  border-radius: 14px; padding: 16px 18px; margin-bottom: 18px;
+  box-shadow: 0 2px 10px rgba(92, 107, 192, 0.04);
+  animation: ccFadeUp 0.5s ease 0.1s both;
+}
+.cc-dist-bar {
+  display: flex; height: 12px; border-radius: 999px; overflow: hidden;
+  background: #eef0f7;
+}
+.cc-seg { height: 100%; transition: width 0.6s ease; }
+.cc-seg-good { background: #16a34a; }
+.cc-seg-warn { background: #d97706; }
+.cc-seg-bad  { background: #dc2626; }
+.cc-seg-none { background: #cbd2e0; }
+.cc-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; font-size: 12px; color: var(--cc-text-2); }
+.cc-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.cc-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+/* ── TOOLBAR ── */
+.cc-toolbar { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.cc-search {
+  flex: 1; min-width: 220px;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--cc-surface); border: 1px solid var(--cc-border);
+  border-radius: 11px; padding: 0 12px; color: var(--cc-muted);
+}
+.cc-search input {
+  flex: 1; border: none; outline: none; background: transparent;
+  padding: 11px 0; font-family: var(--cc-font); font-size: 13.5px; color: var(--cc-text);
+}
+.cc-sort {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--cc-surface); border: 1px solid var(--cc-border);
+  border-radius: 11px; padding: 0 12px; color: var(--cc-muted);
+}
+.cc-sort select {
+  border: none; outline: none; background: transparent; cursor: pointer;
+  font-family: var(--cc-font); font-size: 13px; color: var(--cc-text); padding: 10px 4px;
+}
+
+/* ── TABLE ── */
+.cc-table-wrap {
+  background: var(--cc-surface); border: 1px solid var(--cc-border);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(92, 107, 192, 0.05);
+  animation: ccFadeUp 0.5s ease 0.14s both;
+}
+.cc-table { width: 100%; border-collapse: collapse; }
+.cc-table thead th {
+  text-align: left; font-size: 11.5px; letter-spacing: 0.4px; text-transform: uppercase;
+  color: var(--cc-muted); font-weight: 600; padding: 14px 18px;
+  border-bottom: 1px solid var(--cc-border); background: #f8f9fc;
+}
+.cc-row { cursor: pointer; transition: background 0.18s ease; }
+.cc-row:hover { background: #f5f7fd; }
+.cc-table td { padding: 14px 18px; border-bottom: 1px solid var(--cc-border); font-size: 13.5px; }
+.cc-table tr:last-child td { border-bottom: none; }
+.cc-name { font-weight: 600; }
+.cc-mono { font-family: var(--cc-font-tech); color: var(--cc-text-2); }
+
+.cc-readiness { display: flex; align-items: center; gap: 10px; }
+.cc-score { font-family: var(--cc-font-tech); font-size: 17px; font-weight: 800; min-width: 26px; }
+.cc-bar { flex: 1; max-width: 120px; height: 7px; background: #eef0f7; border-radius: 999px; overflow: hidden; }
+.cc-bar-fill { height: 100%; border-radius: 999px; }
+.cc-bar-fill.cc-good { background: #16a34a; }
+.cc-bar-fill.cc-warn { background: #d97706; }
+.cc-bar-fill.cc-bad  { background: #dc2626; }
+.cc-conf { font-family: var(--cc-font-tech); color: var(--cc-text-2); }
+.cc-chev { color: var(--cc-muted); text-align: right; }
+
+.cc-pill {
+  display: inline-block; font-size: 11.5px; font-weight: 600;
+  padding: 4px 10px; border-radius: 999px; background: #eef0f7; color: var(--cc-muted);
+}
+
+/* score colour bands (text) */
+.cc-good { color: #16a34a; }
+.cc-warn { color: #d97706; }
+.cc-bad { color: #dc2626; }
+.cc-none { color: var(--cc-muted); }
+
+/* ── STATES ── */
+.cc-state {
+  background: var(--cc-surface); border: 1px solid var(--cc-border);
+  border-radius: 14px; padding: 28px; text-align: center; color: var(--cc-muted);
+  box-shadow: 0 2px 10px rgba(92, 107, 192, 0.04);
+}
+.cc-state-error {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: #fef2f2; border-color: #fecaca; color: #b91c1c; padding: 16px; margin-bottom: 16px;
+}
+.cc-skeleton {
+  height: 260px; border-radius: 14px;
+  background: linear-gradient(90deg, #eef0f7 25%, #f7f8fc 50%, #eef0f7 75%);
+  background-size: 200% 100%; animation: ccShimmer 1.4s infinite;
+}
+
+/* ── IN-SHELL CADET DETAIL WRAPPER ── */
+.cc-cadet-detail { padding: 10px clamp(16px, 3vw, 32px) 40px; }
+.cc-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--a-font, "Poppins", sans-serif); font-size: 13px; font-weight: 600;
+  color: var(--a-primary, #5c6bc0); text-decoration: none; margin-bottom: 10px;
+}
+.cc-back:hover { text-decoration: underline; }
+
+/* ── ANIMATIONS ── */
+@keyframes ccFadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ccSpin { to { transform: rotate(360deg); } }
+@keyframes ccShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) { .cc-stats { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .cc-stats { grid-template-columns: 1fr; }
+  .cc-table thead { display: none; }
+  .cc-table, .cc-table tbody, .cc-table tr, .cc-table td { display: block; width: 100%; }
+  .cc-row { padding: 8px 4px; border-bottom: 1px solid var(--cc-border); }
+  .cc-table td { border: none; padding: 4px 18px; }
+  .cc-chev { display: none; }
+}
